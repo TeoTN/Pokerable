@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
-public class Bot extends Player {
+public class Bot extends Player
+{
 	private HandRankBot hrb;
 	private ArrayList<Card> toChange;
 	

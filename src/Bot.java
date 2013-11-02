@@ -12,6 +12,10 @@ public class Bot extends Player
 	public void run() {
 		connect();
 	}
+	
+	public foo(){
+		
+	}
 
 	@Override
 	void promptChange()

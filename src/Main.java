@@ -21,6 +21,13 @@ final class Main
 		System.out.println("Welcome to Pokerable the game.");
 		input = new Scanner(System.in);
 		
+		try {
+			args[0] = args[0].toLowerCase();
+			args[1] = args[1].toLowerCase();
+			args[2] = args[2].toLowerCase();
+		}
+		catch (Exception e) {}
+		
 		if (args.length == 0)
 			throw new Exception("You didn't specify whether want to run either as server or client.");
 		if (args[0].equals("client")) {

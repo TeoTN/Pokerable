@@ -13,232 +13,17 @@ import java.util.Scanner;
 public class Server extends Thread
 {
 	private ServerSocket server = null;
-	private ArrayList<Socket> clients;
-	private ArrayList<ClientThread> clientThreads;
 	private int lastID = 0, round=1, games=0;
-	private int port, players=0, allowedThread=0;
+	private int port;
 	Scanner input;
-	private Deck deck;
-	private Object lock;
-	private ArrayList<Hand> hands;
-	private int changedHands;
-	private ArrayList<Integer> wins;
-	/**
-	 * Class responsible for Client maintenance.
-	 *
-	 */
-	class ClientThread extends Thread {
-		int id;
-	    BufferedReader in = null;
-	    PrintWriter out = null;
-	    String msg = "";
-	    Hand hand;
-	    
-	    /**
-	     * Typical constructor.
-	     * @param id Client's id
-	     */
-		ClientThread(int id) {
-			this.id = id;
-		}
-		
-		/**
-		 * Input and output stream are being established and then thread starts to receive messages from thread.
-		 */
-		@Override
-		public void run() {
-			try {
-	            in = new BufferedReader(new InputStreamReader(clients.get(id).getInputStream()));
-	            out = new PrintWriter(clients.get(id).getOutputStream(), true);
-	        } 
-	        catch (IOException e) {
-	            System.out.println("#"+id+": Unable to reach client.");
-	        }
-			receive();
-		}
-		
-		/**
-		 * Method responsible for receiving messages from server and calling methods connected to received message.
-		 * Message scheme:
-		 *     TYPE|arg0|arg1|arg2|...
-		 *     SETHAND|S9|D9|H9|C3|C7
-		 */
-		public void receive() {
-			while(msg != null) {
-				try {
-					msg = in.readLine();
-		            //System.out.println("#"+id+": Received command: "+msg);
-		            if ("END".equals(msg)) {
-		            	finalize();
-		                return;
-		            }
-		            else if ("CONNECTED".equals(msg)) {
-		            	System.out.println("Client connected.");
-		            	broadcast(new String[]{"WELCOME"});
-		            }
-		            else if (msg.startsWith("HAND")) {
-		            	msg = msg.replace("HAND|", "");
-		            	System.out.println("Player now #"+id+" has hand: "+msg);
-		            	try {
-							hand = new Hand(msg);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-		            	try {
-							hands.set(id, hand);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-		            	
-		            }
-		            else if (msg.startsWith("CHANGE")) {
-		            	changeHand(msg.toUpperCase());
-		            }
-		            else if (msg.startsWith("WINS")) {
-		            	String[] arr = msg.split("\\|");
-		            	wins.set(id, Integer.parseInt(arr[1]));
-		            }
-		        } 
-		        catch (IOException e) {
-		        	finalize();
-		            break;
-		        }
-			}
-		}
-		
-		private void changeHand(String msg) {
-			String receivedStr = msg.substring(7, 21);
-			String localStr = hands.get(id).toString();
-			Hand receivedHand = null;
-			Hand localHand = null;
-			try {
-				receivedHand = new Hand(receivedStr);
-				localHand = new Hand(localStr);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			receivedHand.sort();
-			localHand.sort();
-			receivedStr = receivedHand.toString();
-			localStr = localHand.toString();
-			if (!localStr.equals(receivedStr)) {
-				broadcast(new String[]{"ERROR|CHEAT"});
-				System.out.println("Cheater (player #"+id+") kicked.");
-				finalize();
-			}
-			
-        	String arr[] = msg.split("\\|");
-        	if (arr.length == 6){
-        		System.out.println("Player #"+id+" don't want to change hand.");
-        	}
-        	else {
-        		int changes=0;
-        		
-        		for (int i=1; i<6; i++) {
-        			for (int j=6; j<arr.length; j++) {
-        				if (arr[i].equals(arr[j])) {
-							changes++;
-        					try {
-								deck.pushCard(arr[i]);
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-        					try {
-								arr[i] = deck.pullCard().toString();
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-        				}
-        			}
-        		}
-        		
-        		if (changes < (arr.length-6)) {
-        			String[] cmd = new String[]{"ERROR", "There was a number of incorrect cards to be changed."}; 
-        			broadcast(cmd);
-        		}
-        		
-        		System.out.println("Player #"+id+" decided to change "+(arr.length-6)+" cards.");
-        		String[] newHand = new String[6];
-            	newHand[0]="SETHAND";
-            	for (int i=1; i<6; i++)
-            		newHand[i] = arr[i];
-            	broadcast(newHand);
-        	}
-        	synchronized (lock) {
-        		allowedThread=(allowedThread+1)%(clientThreads.size());
-        		lock.notifyAll();
-        	}
-        	changedHands++;
-		}
-		
-		/**
-		 * Broadcasts message to client.
-		 * @param msg Array of arguments to be sent. E.g. {"SETHAND", "S9", "D9", "H9", "C3", "C7"}
-		 */
-		public void broadcast(String[] msg) {
-			String s = "";
-			for (int i=0; i<msg.length; i++)
-				if (i==msg.length-1)
-					s+=msg[i];
-				else
-					s+=msg[i]+"|";
-			out.println(s);
-		}
-		
-	    @Override
-	    protected void finalize() {
-	        System.out.println("Player #"+id+" has left the table.");
-	        players--;
-	        hands.remove(id);
-	        clientThreads.remove(id);
-	        clients.remove(id);
-	        if (clientThreads.size()<2) {
-	        	System.out.println("Less than 2 players. Ending the game.");
-	        	end();
-	        }
-	        try {
-	            super.finalize();
-	        }
-	        catch (Throwable ex) {}
-	    }
-
-		@Override
-		public void interrupt() {
-			String[] cmd = new String[]{"END"};
-			broadcast(cmd);
-			super.interrupt();
-		}
-		
-		public void queueBroadcast(String[] msg) {
-			synchronized (lock) {
-				while (allowedThread != id) {
-					try {
-						lock.wait();
-					}
-					catch(InterruptedException ex) {}
-				}
-			}
-			try {
-				sleep(1000);
-			} catch (InterruptedException e) {}
-			broadcast(msg);
-		}
-		
-		public void win() {
-			broadcast(new String[]{"WIN"});
-		}
-		
-		public void tie() {
-			broadcast(new String[]{"TIE"});
-		}
-		
-		public void lost() {
-			broadcast(new String[]{"LOST"});
-		}
-		
-	}/* END OF CLASS ClientThread */
+	static int allowedThread=0, players=0;
+	static ArrayList<Socket> clients;
+	static ArrayList<ClientThread> clientThreads;
+	static Deck deck;
+	static Object lock;
+	private static ArrayList<Hand> hands;
+	static int changedHands=0;
+	public static ArrayList<Integer> wins;
 	
 	
 	Server() throws Exception {
@@ -263,11 +48,14 @@ public class Server extends Thread
         }
 	} 
 	
-	public void end() {
+	public void broadcastAll(String msg) {
 		for (ClientThread cth: clientThreads) {
-			String[] msg = new String[]{"ERROR|Too many players left the game."};
-			cth.broadcast(msg);
+			cth.getMsgr().broadcast(msg);
 		}
+	}
+	
+	public void end() {
+		broadcastAll("ERROR|Too many players left the game.");
 		try {
 			finalize();
 		} catch (Throwable e) {
@@ -277,9 +65,8 @@ public class Server extends Thread
 	}
 	
 	public void gameplay() {
- 		 // Inform players about round
-		 for (ClientThread currPlayer: clientThreads)
-			currPlayer.broadcast(new String[]{"ROUND", String.valueOf(round)});
+ 		// Inform players about round
+		broadcastAll("ROUND|"+String.valueOf(round));
 		 System.out.println("\nRound "+round);
 		 
 		 //Reset variables
@@ -291,50 +78,45 @@ public class Server extends Thread
 		 deck.shuffle();
 		 
 		 //Give players their hands
-		 String[] cmd = new String[6];
-		 cmd[0] = "SETHAND";
-		 
 		 for (ClientThread currPlayer: clientThreads) {
+			 String cmd = "SETHAND";
 			 String handStr = "";
-			 String ss;
 			 //Pull 5 cards from deck 
 			 for (int i=0; i<5; i++) {
 				 try {
-					 ss = deck.pullCard().toString();
-					 cmd[i+1]= ss;
-					 handStr += ss;
+					 handStr += deck.pullCard().toString();
 				 }
 				 catch (Exception e) {
 					e.printStackTrace();
 				 }
+				 if (i!=4) handStr+="|";
 			 }
+			 
 			 try {
-				hands.set(currPlayer.id, new Hand(handStr));
+				getHands().set(currPlayer.id, new Hand(handStr));
 			 } catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			 }
 			 //Send Hand to player
-			 currPlayer.broadcast(cmd);
+			 cmd += "|"+handStr;
+			 currPlayer.getMsgr().broadcast(cmd);
 		 }
 		 
 		 //Ask players if they want to change cards
-		 cmd = new String[1];
-		 cmd[0] = "PROMPTCHANGE";
 		 for (ClientThread currPlayer: clientThreads) {
-			 currPlayer.queueBroadcast(cmd);
+			 currPlayer.queueBroadcast("PROMPTCHANGE");
 		 }
 		 
 		 //Assessing hands
-		 while (hands.contains(null) || changedHands!=players) {
+		 while (getHands().contains(null) || changedHands!=players) {
 			 try {
 				sleep(1000);
 			} catch (InterruptedException e) {}
 		 }
 		 ArrayList<HandRank> hrs = new ArrayList<HandRank>();
-		 for (Hand h: hands) {
+		 for (Hand h: getHands()) {
 			 try {
-			 hrs.add(new HandRank(h));
+				 hrs.add(new HandRank(h));
 			 }
 			 catch (Exception e) {
 				 e.printStackTrace();
@@ -343,14 +125,16 @@ public class Server extends Thread
 		 
 		 //Inform about win/tie/lost
 		 HandRank winning = Collections.max(hrs);
-		 System.out.println("Winning hand: "+winning.assessedHand.toString());
+		 System.out.println("Winning hand: "+winning.getAssessedHand().toString());
 		 ArrayList<Integer> winnersID = new ArrayList<Integer>();
+		 
 		 for (ClientThread currPlayer: clientThreads) {
-			 if (currPlayer.hand.toString().equals(winning.assessedHand.toString())) {
-				 winnersID.add(currPlayer.id);
+			 if (currPlayer.getHand().equals(winning.getAssessedHand().toString())) {
+				 winnersID.add(currPlayer.getID());
 			 }
 			 else currPlayer.lost();
 		 }
+		 
 		 if (winnersID.size()==1)
 			 clientThreads.get(winnersID.get(0)).win();
 		 else
@@ -388,9 +172,9 @@ public class Server extends Thread
 			 }
 		 }
 		wins = new ArrayList<Integer>();
-		hands = new ArrayList<Hand>();
+		setHands(new ArrayList<Hand>());
 		for (int i=0; i<players; i++) {
-			hands.add(null);
+			getHands().add(null);
 			wins.add(null);
 		}
 		
@@ -430,26 +214,29 @@ public class Server extends Thread
 		 
 		 //Send info about winners, display winner on server console
 		 System.out.println("");
-		 for (ClientThread cth: clientThreads) {
-			 cth.broadcast(new String[]{"GETWINS"});
-		 }
+		 broadcastAll("GETWINS");
 		 while (wins.contains(null)) {}
 		 
-		 String[] msg = new String[players+1];
-		 msg[0]="RESULT";
+		 String msg = "RESULT";
 		 for (int i=0; i<wins.size(); i++) {
 			 if (wins.get(i) == Collections.max(wins)) {
-				 msg[i+1]=wins.get(i)+" (winner)";
+				 msg += "|"+wins.get(i)+" (winner)";
 				 System.out.println("Player #"+i+" is winner");
 			 }
 			 else
-				 msg[i+1]=""+wins.get(i);
+				 msg +="|"+wins.get(i);
 		 }
-		 for (ClientThread cth: clientThreads) {
-			 cth.broadcast(msg);
-		 }
+		 broadcastAll(msg);
 		 
 		 System.out.println("GAME IS OVER.");
 		 System.exit(0);
+	}
+
+	public static ArrayList<Hand> getHands() {
+		return hands;
+	}
+
+	public static void setHands(ArrayList<Hand> hands) {
+		Server.hands = hands;
 	}
 }

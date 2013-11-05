@@ -396,6 +396,7 @@ public class HandRank implements Comparable<HandRank>
 	}
 	
 	public Hand getAssessedHand() {
+		assessedHand.sort();
 		return assessedHand;
 	}
 }

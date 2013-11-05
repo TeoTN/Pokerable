@@ -15,7 +15,7 @@ public class Bot extends Player
 	}
 
 	@Override
-	void promptChange()
+	public void promptChange()
 	{
 		try {
 			hrb = new HandRankBot(hand);
@@ -34,6 +34,6 @@ public class Bot extends Player
 			if (toChange.size()>0)
 				System.out.println(msg.substring(15, msg.length()));
 		}
-		broadcast("CHANGE|"+msg); 
+		msgr.broadcast("CHANGE|"+msg); 
 	}
 }

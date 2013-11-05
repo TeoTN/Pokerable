@@ -41,7 +41,7 @@ public class Human extends Player {
 	    		toChange+=c;
 	    		if (i!=a-1) toChange+="|";
 	    	}
-	    	broadcast("CHANGE|"+toChange); 
+	    	msgr.broadcast("CHANGE|"+toChange); 
 	    	System.out.println("Wait for other players to change their hands.");
     	}
     	else {

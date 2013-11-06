@@ -20,7 +20,7 @@ public class Human extends Player {
     		promptChange();
     		return;
     	}
-    	if (a>=0 && a<5) {
+    	if (a >= 0 && a < 5) {
     		if (a!=0) {
 		    	System.out.println("This is your hand: "+hand.toString());
 		    	System.out.println("Get desc of cards you'd like to change (e.g. S4 D4)");

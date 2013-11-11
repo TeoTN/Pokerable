@@ -81,7 +81,6 @@ public class Messenger {
             	try {
 					Server.getHands().set(getID(), new Hand(msg));
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
             }

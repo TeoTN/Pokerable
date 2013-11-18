@@ -12,7 +12,7 @@ import controller.Messenger;
  *
  */
 public class ClientThread extends Thread {
-	
+	private Socket socket;
 	private Messenger msgr;
 	int id;
     BufferedReader in = null;
@@ -39,8 +39,8 @@ public class ClientThread extends Thread {
 	@Override
 	public void run() {
 		try {
-            in = new BufferedReader(new InputStreamReader(getClientById(id).getInputStream()));
-            out = new PrintWriter(getClientById(id).getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
         } 
         catch (IOException e) {
             System.out.println("#"+id+": Unable to reach client.");
@@ -49,8 +49,8 @@ public class ClientThread extends Thread {
 		msgr.receive();			
 	}
 	
-	private Socket getClientById(int i) {
-		return Server.clients.get(id);
+	public void bindSocket(Socket newSocket) {
+		socket = newSocket;
 	}
 	
 	public BufferedReader getInputStream() {
@@ -132,8 +132,7 @@ public class ClientThread extends Thread {
         System.out.println("Player #"+id+" has left the table.");
         Server.players--;
         Server.getHands().remove(id);
-        Server.clientThreads.remove(id);
-        Server.clients.remove(id);
+        Server.clientThreads.remove(id); //TODO Removal method
         if (Server.clientThreads.size()<2) {
         	System.out.println("Less than 2 players. Ending the game.");
         	//TODO Server.end();

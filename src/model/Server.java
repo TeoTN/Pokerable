@@ -17,7 +17,6 @@ public class Server extends Thread
 	private int port;
 	Scanner input;
 	static int allowedThread=0, players=0;
-	static ArrayList<Socket> clients;
 	static ArrayList<ClientThread> clientThreads;
 	static Deck deck;
 	static Object lock;
@@ -31,10 +30,9 @@ public class Server extends Thread
 	}
 	
 	Server(int port) throws Exception {
+		//A lock for further synchronization of clients' threads is created 
 		lock = new Object();
 		this.port = port;
-		clients = new ArrayList<Socket>(4);
-		clientThreads = new ArrayList<ClientThread>(4);
 		input = new Scanner(System.in);
 		init();
 	}
@@ -51,6 +49,16 @@ public class Server extends Thread
 	public void broadcastAll(String msg) {
 		for (ClientThread cth: clientThreads) {
 			cth.getMsgr().broadcast(msg);
+		}
+	}
+	
+	public void onServerExit() {
+		broadcastAll("END|Server was shut down or severe error occured.");
+		try {
+			finalize();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -144,6 +152,7 @@ public class Server extends Thread
 
 	public void run() {
 		System.out.println("Server successfully created.");
+		//Prompt user to specify a number of players that will join the game
 		while (players<2 || players>4) {
 			System.out.println("How many players will be playing? (2-4)");
 			String p = input.next();
@@ -151,26 +160,27 @@ public class Server extends Thread
 				players = Integer.parseInt(p);
 			}
 			catch (NumberFormatException ex) {
-				System.out.println("Incorrect input. Please give a number of players between 2 and 4.");
+				System.out.println("Incorrect input was specified. Please give a number of players between 2 and 4.");
 				continue;
 			}
 		}
 		
-		 while (games == 0) {
-			 System.out.println("How many rounds would you like to play? (max. 10)");
-			 String r = input.next();
-			 try {
-				 games = Integer.parseInt(r);
-			 }
-			 catch (NumberFormatException e) {
-				 System.out.println("Incorrect number of rounds was provided.");
-				 continue;
-			 }
-			 if (games > 10) {
-				 System.out.println("Too many rounds were set.");
-				 games=0;
-			 }
-		 }
+		//Create an ArrayList that's going to hold players' threads. 
+		clientThreads = new ArrayList<ClientThread>(players);
+		
+		//Prompt user to specify how many rounds will be played.
+		while (games == 0) {
+			System.out.println("How many rounds would you like to play?");
+			String r = input.next();
+			try {
+				games = Integer.parseInt(r);
+			}
+			catch (NumberFormatException e) {
+				System.out.println("Incorrect number of rounds was provided.");
+				continue;
+			}
+		}
+		
 		wins = new ArrayList<Integer>();
 		setHands(new ArrayList<Hand>());
 		for (int i=0; i<players; i++) {
@@ -179,14 +189,14 @@ public class Server extends Thread
 		}
 		
 		
-		while (clients.size() != players) {
-			 System.out.println("Still waiting for " + (players-clients.size()) + " players to join.");
+		while (lastID != players) {
+			 System.out.println("Still waiting for " + (players-lastID) + " players to join.");
 			 System.out.println("Please connect on port " + port);
 	         try {
-	        	 clients.add(lastID, server.accept());
 	             clientThreads.add(lastID, new ClientThread( lastID ));
+	             clientThreads.get(lastID).bindSocket(server.accept());
 	             clientThreads.get(lastID).start();
-	             lastID++;
+		         lastID++;
 	         }
 	         catch (IOException e) {
 	        	 System.out.println("Error: unable to accept connection @"+port);
@@ -194,12 +204,12 @@ public class Server extends Thread
 	         catch (NullPointerException ex) {
 	        	 ex.printStackTrace();
 	         }
-	            
+	         
 	         try {
 	        	 Thread.sleep(1000);
 	         }
 	         catch (InterruptedException ex) {
-	        	 System.out.println("\nSevere error: interrupted server thread. Exit.");
+	        	 System.err.println("\nSevere error: interrupted server thread. Exit.");
 	        	 System.exit(-1);
 	         }
 		 } /* END OF WHILE - WAITING FOR CLIENTS */

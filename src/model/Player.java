@@ -13,6 +13,7 @@ import controller.Messenger;
 public abstract class Player extends Thread
 {
 	protected Messenger msgr;
+	private int accountBalance;
 	int wins;		//number of won games
 	Hand hand;		//hand
 	int account;	//amount of cash the player has
@@ -92,6 +93,8 @@ public abstract class Player extends Thread
 	 * 	BET|[typeofbet]|[money]
 	 * e.g.: msgr.broadcast("BET|CALL|0")
 	 * otherwise a deadlock is going to occur
+	 * 
+	 * Account balance is available in field accountBalance of type int
 	 */
 	abstract public void promptBet();
 
@@ -147,6 +150,7 @@ public abstract class Player extends Thread
     
     public void displayMoney(String msg) {
     	int m = Integer.parseInt(msg);
+    	accountBalance = m;
     	System.out.println("Currently you have "+m+" pounds");
     }
     

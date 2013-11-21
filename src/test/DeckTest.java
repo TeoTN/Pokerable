@@ -16,7 +16,7 @@ public class DeckTest
 	@Test
 	public void test()
 	{
-		testing = new Deck();
+		testing = Deck.getInstance();
 		
 		int cnt = 0;
 		while(!testing.empty())
@@ -36,7 +36,7 @@ public class DeckTest
 	@Test
 	public void pushpull() throws Exception
 	{
-		testing = new Deck();
+		testing = Deck.getInstance();
 		testing.pullCard();
 		testing.pushCard("D5");
 	}

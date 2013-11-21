@@ -19,6 +19,7 @@ public class ClientThread extends Thread {
     PrintWriter out = null;
     String msg = "";
     Hand hand;
+	private Deck deck;
     
     /**
      * Constructor for instantiation
@@ -31,6 +32,7 @@ public class ClientThread extends Thread {
      */
 	ClientThread(int id) {
 		this.id = id;
+		deck = Deck.getInstance();
 	}
 	
 	/**
@@ -95,17 +97,12 @@ public class ClientThread extends Thread {
     				if (arr[i].equals(arr[j])) {
 						changes++;
     					try {
-							Server.deck.pushCard(arr[i]);
+							deck.pushCard(arr[i]);
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
-    					try {
-							arr[i] = Server.deck.pullCard().toString();
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-    				}
+						arr[i] = deck.pullCardToString();
+					}
     			}
     		}
     		
@@ -125,6 +122,27 @@ public class ClientThread extends Thread {
     		Server.lock.notifyAll();
     	}
     	Server.changedHands++;
+	}
+	
+	public Hand generateHand() throws Exception {
+		String cmd = "SETHAND";
+		 String handStr = "";
+		 //Pull 5 cards from deck 
+		 for (int i=0; i<5; i++) {
+			 try {
+				 handStr += deck.pullCardToString();
+			 }
+			 catch (Exception e) {
+				e.printStackTrace();
+			 }
+			 if (i!=4) handStr+="|";
+		 }
+		 
+
+		//Send Hand to player
+		cmd += "|"+handStr;
+		msgr.broadcast(cmd);
+		return new Hand(handStr);
 	}
 	
     @Override
@@ -192,7 +210,7 @@ public class ClientThread extends Thread {
 		hand.sort();
 		return hand.toString();
 	}
-	
+
 	public int getID() {
 		return id;
 	}

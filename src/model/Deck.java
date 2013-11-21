@@ -1,11 +1,17 @@
 package model;
 import java.util.*;
 
+/**
+ * Class holding deck of cards.
+ * Following implementation was made with usage of Singleton Pattern.
+ * @author Piotr Staniów
+ */
 public class Deck
 {
 	/**
 	 * Array of cards in the deck
 	 */
+	private static Deck instance;
 	private ArrayList<Card> cards;
 	private Character[] CardList = {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
 	
@@ -13,7 +19,7 @@ public class Deck
 	/**
 	 * Constructor of class Deck. Loads ArrayList cards.
 	 */
-	public Deck()
+	private Deck()
 	{
 		cards = new ArrayList<Card>();
 		
@@ -50,6 +56,17 @@ public class Deck
 	}
 	
 	/**
+	 * Getter of instance of Deck class.
+	 * Instance of Deck is being created unless it exists,
+	 * in other case reference to existing instance is returned.  
+	 */
+	public static synchronized Deck getInstance() {
+		if (instance == null)
+			instance = new Deck();
+		return instance;
+	}
+	
+	/**
 	 * Pulls a card from the top of deck
 	 * @return top card
 	 */
@@ -79,6 +96,17 @@ public class Deck
 		else{
 			throw new Exception("Too many cards");
 		}
+	}
+	
+	public String pullCardToString() {
+		String ss = "";
+		try {
+			ss = pullCard().toString();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ss;
 	}
 	
 	/**

@@ -18,7 +18,6 @@ public class Server extends Thread
 	Scanner input;
 	static int allowedThread=0, players=0;
 	static ArrayList<ClientThread> clientThreads;
-	static Deck deck;
 	static Object lock;
 	private static ArrayList<Hand> hands;
 	static int changedHands=0;
@@ -81,33 +80,20 @@ public class Server extends Thread
 		 changedHands = 0;
 		 allowedThread = 0;
 		 
-		 //Create the Deck
-		 deck = new Deck();
-		 deck.shuffle();
-		 
 		 //Give players their hands
 		 for (ClientThread currPlayer: clientThreads) {
-			 String cmd = "SETHAND";
-			 String handStr = "";
-			 //Pull 5 cards from deck 
-			 for (int i=0; i<5; i++) {
-				 try {
-					 handStr += deck.pullCard().toString();
-				 }
-				 catch (Exception e) {
-					e.printStackTrace();
-				 }
-				 if (i!=4) handStr+="|";
-			 }
-			 
-			 try {
-				getHands().set(currPlayer.id, new Hand(handStr));
-			 } catch (Exception e) {
+			Hand h = null;
+			try {
+				h = currPlayer.generateHand();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				getHands().set(currPlayer.id, h);
+			} catch (Exception e) {
 				e.printStackTrace();
-			 }
-			 //Send Hand to player
-			 cmd += "|"+handStr;
-			 currPlayer.getMsgr().broadcast(cmd);
+			}
 		 }
 		 
 		 //Ask players if they want to change cards

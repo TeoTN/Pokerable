@@ -80,6 +80,7 @@ public class Messenger {
             	performMethod("setHand", msg);
             }
             else if (msg.startsWith("CHANGE")) {
+            	msg = msg.replace("CHANGE|", "");
             	performMethod("changeHand", msg.toUpperCase());
             }
             else if (msg.startsWith("WINS")) {
@@ -153,6 +154,7 @@ public class Messenger {
 		}
 		catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
+			System.err.println(name+"   "+params.toString());
 			e.printStackTrace();
 		}
 	}

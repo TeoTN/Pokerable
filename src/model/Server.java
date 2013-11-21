@@ -16,24 +16,43 @@ public class Server extends Thread
 	private int lastID = 0, round=1, games=0;
 	private int port;
 	Scanner input;
-	static int allowedThread=0, players=0;
+	int players=0;
 	static ArrayList<ClientThread> clientThreads;
-	static Object lock;
 	private static ArrayList<Hand> hands;
 	static int changedHands=0;
 	public static ArrayList<Integer> wins;
+	private static Server instance;
 	
-	
-	Server() throws Exception {
+	private Server() throws Exception {
 		this(1700);
 	}
 	
-	Server(int port) throws Exception {
-		//A lock for further synchronization of clients' threads is created 
-		lock = new Object();
+	private Server(int port) throws Exception {
 		this.port = port;
 		input = new Scanner(System.in);
 		init();
+	}
+	
+	public static Server getInstance() {
+		if (instance == null) {
+			try {
+				instance = new Server();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return instance;
+	}
+	
+	public static Server getInstance(int port) {
+		if (instance == null) {
+			try {
+				instance = new Server(port);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return instance;
 	}
 	
 	public void init() throws Exception {
@@ -59,15 +78,6 @@ public class Server extends Thread
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	public void end() {
-		broadcastAll("ERROR|Too many players left the game.");
-		try {
-			finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
 		System.exit(-1);
 	}
 	
@@ -78,7 +88,6 @@ public class Server extends Thread
 		 
 		 //Reset variables
 		 changedHands = 0;
-		 allowedThread = 0;
 		 
 		 //Give players their hands
 		 for (ClientThread currPlayer: clientThreads) {
@@ -122,8 +131,10 @@ public class Server extends Thread
 		 System.out.println("Winning hand: "+winning.getAssessedHand().toString());
 		 ArrayList<Integer> winnersID = new ArrayList<Integer>();
 		 
+		 String winningHandStr = winning.getAssessedHand().toString();
 		 for (ClientThread currPlayer: clientThreads) {
-			 if (currPlayer.getHand().equals(winning.getAssessedHand().toString())) {
+			 String handOfCurrPlayer = getHandOfId(currPlayer.getID());
+			 if (handOfCurrPlayer.equals(winningHandStr)) {
 				 winnersID.add(currPlayer.getID());
 			 }
 			 else currPlayer.lost();
@@ -234,5 +245,32 @@ public class Server extends Thread
 
 	public static void setHands(ArrayList<Hand> hands) {
 		Server.hands = hands;
+	}
+	
+	public void setHandOfId(int id, String handStr) {
+		Hand hand = null;
+		try {
+			hand = new Hand(handStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		hands.set(id, hand);
+	}
+	
+	public static String getHandOfId(int id) {
+		Hand hand = hands.get(id);
+		hand.sort();
+		return hand.toString();
+	}
+	
+	public void detachPlayer(int id) {
+		clientThreads.remove(id);
+        if (clientThreads.size()<2) {
+        	System.out.println("Less than 2 players. Ending the game.");
+        	onServerExit();
+        }
+        players--;
+        getHands().remove(id);
+        clientThreads.remove(id); //TODO Removal method
 	}
 }

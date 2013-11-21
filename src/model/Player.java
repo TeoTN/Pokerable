@@ -87,6 +87,7 @@ public abstract class Player extends Thread
 	}
 	
 	public String getHandToString() {
+		hand.sort();
 		return hand.toString();
 	}
 	

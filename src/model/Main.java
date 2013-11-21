@@ -88,12 +88,12 @@ final class Main
 				}
 			}
 			try {
-				s = new Server(port);
+				s = Server.getInstance(port);
 			}
 			catch (Exception e) {
 				System.err.println("Unable to start server on specified port. Trying to start on 1700");
 				try {
-					s = new Server();
+					s = Server.getInstance();
 				}
 				catch (Exception ex) {
 					System.err.println("Unable to start server on port 1700. Closing...");

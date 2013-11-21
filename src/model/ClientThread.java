@@ -18,8 +18,9 @@ public class ClientThread extends Thread {
     BufferedReader in = null;
     PrintWriter out = null;
     String msg = "";
-    Hand hand;
 	private Deck deck;
+	static int allowedThread=0;
+	static Object lock = null;
     
     /**
      * Constructor for instantiation
@@ -33,6 +34,9 @@ public class ClientThread extends Thread {
 	ClientThread(int id) {
 		this.id = id;
 		deck = Deck.getInstance();
+		//A lock for further synchronization of clients' threads is created
+		if (lock == null)
+			lock = new Object();
 	}
 	
 	/**
@@ -64,36 +68,23 @@ public class ClientThread extends Thread {
 	}
 	
 	public void changeHand(String msg) {
-		String receivedStr = msg.substring(7, 21);
-		String localStr = Server.getHands().get(id).toString();
-		Hand receivedHand = null;
-		Hand localHand = null;
-		try {
-			receivedHand = new Hand(receivedStr);
-			localHand = new Hand(localStr);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		receivedHand.sort();
-		localHand.sort();
-		receivedStr = receivedHand.toString();
-		localStr = localHand.toString();
-		if (!localStr.equals(receivedStr)) {
+		String localStr = Server.getHandOfId(id);
+		if (!msg.startsWith(localStr)) {
 			msgr.broadcast("ERROR|CHEAT");
 			System.out.println("Cheater (player #"+id+") kicked.");
 			finalize();
 		}
 		
     	String arr[] = msg.split("\\|");
-    	if (arr.length == 6){
+    	if (arr.length <= 5){
     		System.out.println("Player #"+id+" don't want to change hand.");
+    		System.err.println("DBG: "+msg);
     	}
     	else {
     		int changes=0;
     		
-    		for (int i=1; i<6; i++) {
-    			for (int j=6; j<arr.length; j++) {
+    		for (int i=0; i<5; i++) {
+    			for (int j=5; j<arr.length; j++) {
     				if (arr[i].equals(arr[j])) {
 						changes++;
     					try {
@@ -106,20 +97,20 @@ public class ClientThread extends Thread {
     			}
     		}
     		
-    		if (changes < (arr.length-6)) {
+    		if (changes < (arr.length-5)) {
     			String cmd = new String("ERROR|There was a number of incorrect cards to be changed."); 
     			msgr.broadcast(cmd);
     		}
     		
-    		System.out.println("Player #"+id+" decided to change "+(arr.length-6)+" cards.");
+    		System.out.println("Player #"+id+" decided to change "+(arr.length-5)+" cards.");
     		String newHand = "SETHAND";
-        	for (int i=1; i<6; i++)
+        	for (int i=0; i<5; i++)
         		newHand +="|"+arr[i];
         	msgr.broadcast(newHand);
     	}
-    	synchronized (Server.lock) {
-    		Server.allowedThread=(Server.allowedThread+1)%(Server.clientThreads.size());
-    		Server.lock.notifyAll();
+    	synchronized (lock) {
+    		allowedThread=(allowedThread+1)%(Server.clientThreads.size());
+    		lock.notifyAll();
     	}
     	Server.changedHands++;
 	}
@@ -148,13 +139,7 @@ public class ClientThread extends Thread {
     @Override
     protected void finalize() {
         System.out.println("Player #"+id+" has left the table.");
-        Server.players--;
-        Server.getHands().remove(id);
-        Server.clientThreads.remove(id); //TODO Removal method
-        if (Server.clientThreads.size()<2) {
-        	System.out.println("Less than 2 players. Ending the game.");
-        	//TODO Server.end();
-        }
+        getServer().detachPlayer(id);
         try {
             super.finalize();
         }
@@ -168,10 +153,10 @@ public class ClientThread extends Thread {
 	}
 	
 	public void queueBroadcast(String msg) {
-		synchronized (Server.lock) {
-			while (Server.allowedThread != id) {
+		synchronized (lock) {
+			while (allowedThread != id) {
 				try {
-					Server.lock.wait();
+					lock.wait();
 				}
 				catch(InterruptedException ex) {}
 			}
@@ -198,26 +183,15 @@ public class ClientThread extends Thread {
 		msgr.broadcast("LOST");
 	}
 	
-	public void setHand(String h) {
-		try {
-			hand = new Hand(h);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			Server.getHands().set(getID(), new Hand(h));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public String getHand() {
-		hand.sort();
-		return hand.toString();
+	public void setHand(String handStr) {
+		getServer().setHandOfId(id, handStr);
 	}
 
 	public int getID() {
 		return id;
+	}
+	
+	public Server getServer() {
+		return Server.getInstance();
 	}
 }/* END OF CLASS ClientThread */

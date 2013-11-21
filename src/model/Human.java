@@ -50,4 +50,13 @@ public class Human extends Player {
     		return;
     	}
 	}
+	
+	/**
+	 * Documentation and usage available in Player class
+	 * @see Player
+	 */
+	@Override
+	public void promptBet() {
+		msgr.broadcast("BET|");
+	}
 }

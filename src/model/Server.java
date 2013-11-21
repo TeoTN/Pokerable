@@ -14,12 +14,13 @@ import java.util.Scanner;
 public class Server extends Thread
 {
 	private ServerSocket server = null;
-	private int lastID = 0, round=1, games=0;
+	private int lastID = 0, round=1, games=0, initialMoney = 0;
 	private int port;
 	Scanner input;
 	int players=0;
 	static List<ClientThread> clientThreads;
 	private static List<Hand> hands;
+	private static List<Integer> accounts;
 	static int changedHands=0;
 	public static List<Integer> wins;
 	private static Server instance;
@@ -84,7 +85,13 @@ public class Server extends Thread
 	public void gameplay() {
  		// Inform players about round
 		broadcastAll("ROUND|"+String.valueOf(round));
-		 System.out.println("\nRound "+round);
+		System.out.println("\nRound "+round);
+		
+		//Inform players about their current account status
+		for (ClientThread cth: clientThreads) {
+			int id = cth.getID();
+			cth.displayAccount(accounts.get(id));
+		}
 		 
 		 //Reset variables
 		 changedHands = 0;
@@ -104,13 +111,18 @@ public class Server extends Thread
 			}
 		 }
 		 
+		 //Ask players for BET
+		 for (ClientThread currPlayer: clientThreads) {
+			 currPlayer.queueBroadcast("PROMPTBET");
+		 }
+		 
 		 //Ask players if they want to change cards
 		 for (ClientThread currPlayer: clientThreads) {
 			 currPlayer.queueBroadcast("PROMPTCHANGE");
 		 }
 		 
 		 //Assessing hands
-		 while (getHands().contains(null) || changedHands!=players) {
+		 while (getHands().contains(null) || changedHands<players) {
 			 try {
 				sleep(1000);
 			} catch (InterruptedException e) {}
@@ -156,13 +168,10 @@ public class Server extends Thread
 				players = Integer.parseInt(p);
 			}
 			catch (NumberFormatException ex) {
-				System.out.println("Incorrect input was specified. Please give a number of players between 2 and 4.");
+				System.err.println("Incorrect input was specified. Please give a number of players between 2 and 4.\n Try again.");
 				continue;
 			}
 		}
-		
-		//Create an ArrayList that's going to hold players' threads. 
-		clientThreads = new ArrayList<ClientThread>(players);
 		
 		//Prompt user to specify how many rounds will be played.
 		while (games == 0) {
@@ -172,19 +181,38 @@ public class Server extends Thread
 				games = Integer.parseInt(r);
 			}
 			catch (NumberFormatException e) {
-				System.out.println("Incorrect number of rounds was provided.");
+				System.err.println("Incorrect number of rounds was provided. Try again.");
 				continue;
 			}
 		}
 		
+		//Prompt user to specify how much money players will initially have
+		while (initialMoney == 0) {
+			System.out.println("How much money shall players initially have?");
+			String r = input.next();
+			try {
+				initialMoney = Integer.parseInt(r);
+			}
+			catch (NumberFormatException e) {
+				System.err.println("Incorrect amount of money was provided. Try again.");
+				continue;
+			}
+		}
+		
+		//Create an ArrayList that's going to hold players' threads. 
+		clientThreads = new ArrayList<ClientThread>(players);
+		
+		//Initialize empty arrays holding number of wins, hands, money in accounts
 		wins = new ArrayList<Integer>();
 		hands = new ArrayList<Hand>();
+		accounts = new ArrayList<Integer>();
 		for (int i=0; i<players; i++) {
 			getHands().add(null);
 			wins.add(null);
+			accounts.add(initialMoney);
 		}
 		
-		
+		//Wait for clients to join
 		while (lastID != players) {
 			 System.out.println("Still waiting for " + (players-lastID) + " players to join.");
 			 System.out.println("Please connect on port " + port);
@@ -195,7 +223,7 @@ public class Server extends Thread
 		         lastID++;
 	         }
 	         catch (IOException e) {
-	        	 System.out.println("Error: unable to accept connection @"+port);
+	        	 System.err.println("Error: unable to accept connection @"+port);
 	         }
 	         catch (NullPointerException ex) {
 	        	 ex.printStackTrace();

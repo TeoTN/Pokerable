@@ -115,6 +115,21 @@ public class ClientThread extends Thread {
     	Server.changedHands++;
 	}
 	
+	/**
+	 * Expected arguments params specifies the type of bet and amount of money involved in it.
+	 * Whenever CALL or FOLD is called (and similar), amount is ignored
+	 * 
+	 * Allowed thread is changed in order to prevent dead lock
+	 * 
+	 * @param params Data describing bet [type]|[amount]
+	 */
+	public void bet(String params) {
+		synchronized (lock) {
+    		allowedThread=(allowedThread+1)%(Server.clientThreads.size());
+    		lock.notifyAll();
+    	}
+	}
+	
 	public Hand generateHand() throws Exception {
 		String cmd = "SETHAND";
 		 String handStr = "";
@@ -134,6 +149,10 @@ public class ClientThread extends Thread {
 		cmd += "|"+handStr;
 		msgr.broadcast(cmd);
 		return new Hand(handStr);
+	}
+	
+	public void displayAccount(int money) {
+		msgr.broadcast("DISPLAYMONEY|"+money);
 	}
 	
     @Override

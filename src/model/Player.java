@@ -80,7 +80,20 @@ public abstract class Player extends Thread
 		return out;
 	}
 	
+	/**
+	 * Function MUST answer with message covering pattern: 
+	 * 	CHANGE|[...]
+	 * otherwise a deadlock is going to occur
+	 */
 	abstract public void promptChange();
+	
+	/**
+	 * Function MUST answer with message covering pattern:
+	 * 	BET|[typeofbet]|[money]
+	 * e.g.: msgr.broadcast("BET|CALL|0")
+	 * otherwise a deadlock is going to occur
+	 */
+	abstract public void promptBet();
 
 	public Hand getHand() {
 		return hand;
@@ -130,6 +143,11 @@ public abstract class Player extends Thread
     
     public void lost() {
     	System.out.println("You've lost! Your score: "+ wins);
+    }
+    
+    public void displayMoney(String msg) {
+    	int m = Integer.parseInt(msg);
+    	System.out.println("Currently you have "+m+" pounds");
     }
     
     public void broadcastWins() {

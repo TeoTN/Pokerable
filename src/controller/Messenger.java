@@ -99,6 +99,17 @@ public class Messenger {
             else if (msg.startsWith("PROMPTCHANGE")) {
             	performMethod("promptChange"); 
             }
+            else if (msg.startsWith("PROMPTBET")) {
+            	performMethod("promptBet"); 
+            }
+            else if (msg.startsWith("BET")) {
+            	msg = msg.replace("BET|", "");
+            	performMethod("bet", msg);
+            }
+            else if (msg.startsWith("DISPLAYMONEY")) {
+            	msg = msg.replace("DISPLAYMONEY|", "");
+            	performMethod("displayMoney", msg); 
+            }
             else if (msg.startsWith("WIN")) {
             	performMethod("win");
             }

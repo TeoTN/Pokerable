@@ -36,4 +36,14 @@ public class Bot extends Player
 		}
 		msgr.broadcast("CHANGE|"+msg); 
 	}
+
+	/**
+	 * Documentation and usage available in Player class
+	 * @see Player
+	 */
+	@Override
+	public void promptBet() {
+		// TODO Auto-generated method stub
+		
+	}
 }

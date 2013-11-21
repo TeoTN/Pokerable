@@ -83,8 +83,8 @@
     </display>  
   </class>  
   <association id="10">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="11" name="cards"/>      
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="11" name="toChange"/>      
       <multiplicity id="12" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
@@ -98,75 +98,75 @@
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="16">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="17" name="cards"/>      
-      <multiplicity id="18" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="19">    
-    <bendpoint x="1053" y="648"/>    
-    <bendpoint x="1011" y="648"/>    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="20">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="21" name="msgr"/>      
-      <multiplicity id="22" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="23">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="24" name="deck"/>      
-      <multiplicity id="25" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="26">    
-    <bendpoint x="762" y="598"/>    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="27" name="hand"/>      
-      <multiplicity id="28" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="29">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="30" name="toChange"/>      
-      <multiplicity id="31" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="32">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="33" name="clientThreads"/>      
-      <multiplicity id="34" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="35">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="36" name="msgr"/>      
-      <multiplicity id="37" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="38">    
+  <generalization id="16">    
     <bendpoint x="916" y="647"/>    
     <bendpoint x="959" y="648"/>    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="2"/>  
   </generalization>  
+  <association id="17">    
+    <bendpoint x="762" y="598"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="18" name="hand"/>      
+      <multiplicity id="19" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="20">    
+    <bendpoint x="1053" y="648"/>    
+    <bendpoint x="1011" y="648"/>    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <association id="21">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="22" name="msgr"/>      
+      <multiplicity id="23" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="24">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="25" name="clientThreads"/>      
+      <multiplicity id="26" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="27">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="28" name="cards"/>      
+      <multiplicity id="29" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="30">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="31" name="msgr"/>      
+      <multiplicity id="32" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="33">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="34" name="cards"/>      
+      <multiplicity id="35" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="36">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="37" name="deck"/>      
+      <multiplicity id="38" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <association id="39">    
     <bendpoint x="255" y="598"/>    
     <end type="SOURCE" refId="1" navigable="false">      

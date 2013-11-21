@@ -3,6 +3,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,11 +19,12 @@ public class Server extends Thread
 	private int port;
 	Scanner input;
 	int players=0;
+	private static List<PlayerData> pData;
 	static List<ClientThread> clientThreads;
-	private static List<Hand> hands;
-	private static List<Integer> accounts;
+	//private static List<Hand> hands;
+	//private static List<Integer> accounts;
 	static int changedHands=0;
-	public static List<Integer> wins;
+	//public static List<Integer> wins;
 	private static Server instance;
 	
 	private Server() throws Exception {
@@ -90,7 +92,7 @@ public class Server extends Thread
 		//Inform players about their current account status
 		for (ClientThread cth: clientThreads) {
 			int id = cth.getID();
-			cth.displayAccount(accounts.get(id));
+			cth.displayAccount(getPlayerData(id).getBalance());
 		}
 		 
 		 //Reset variables
@@ -105,7 +107,7 @@ public class Server extends Thread
 				e1.printStackTrace();
 			}
 			try {
-				getHands().set(currPlayer.id, h);
+				getPlayerData(currPlayer.id).setHand(h);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -122,29 +124,36 @@ public class Server extends Thread
 		 }
 		 
 		 //Assessing hands
-		 while (getHands().contains(null) || changedHands<players) {
-			 try {
-				sleep(1000);
-			} catch (InterruptedException e) {}
-		 }
-		 ArrayList<HandRank> hrs = new ArrayList<HandRank>();
-		 for (Hand h: getHands()) {
-			 try {
-				 hrs.add(new HandRank(h));
-			 }
-			 catch (Exception e) {
-				 e.printStackTrace();
+		 for (PlayerData pd: pData) {
+			 while (pd.getHand() == null  || changedHands<players) {
+				 try {
+					sleep(1000);
+				 }
+				 catch (InterruptedException e) {}
 			 }
 		 }
+
+		 /* Get player with the strongest Hand
+		  * new Comparator is set due to fact that PlayerData is already Comparable,
+		  * but compareTo returns which player has more wins 
+		  */
+		 PlayerData winning = Collections.max(pData, new Comparator<PlayerData>() {
+			    @Override
+			    public int compare(PlayerData first, PlayerData second) {
+			        return first.getHand().compareTo(second.getHand());
+			    }
+			});
 		 
 		 //Inform about win/tie/lost
-		 HandRank winning = Collections.max(hrs);
-		 System.out.println("Winning hand: "+winning.getAssessedHand().toString());
+		 String winningHandStr = winning.getHandToString();
+		 System.out.println("Winning hand: "+winningHandStr);
+		 
+		 //We get IDs of players that actually have winning hand in order to decide whether acclaim tie or win
 		 ArrayList<Integer> winnersID = new ArrayList<Integer>();
 		 
-		 String winningHandStr = winning.getAssessedHand().toString();
 		 for (ClientThread currPlayer: clientThreads) {
-			 String handOfCurrPlayer = getHandOfId(currPlayer.getID());
+			 int id = currPlayer.getID();
+			 String handOfCurrPlayer = getPlayerData(id).getHandToString();
 			 if (handOfCurrPlayer.equals(winningHandStr)) {
 				 winnersID.add(currPlayer.getID());
 			 }
@@ -201,15 +210,12 @@ public class Server extends Thread
 		
 		//Create an ArrayList that's going to hold players' threads. 
 		clientThreads = new ArrayList<ClientThread>(players);
+		pData = new ArrayList<PlayerData>(players);
 		
-		//Initialize empty arrays holding number of wins, hands, money in accounts
-		wins = new ArrayList<Integer>();
-		hands = new ArrayList<Hand>();
-		accounts = new ArrayList<Integer>();
+		//Initialize PlayerData structure holding number of wins, hands, money in accounts
 		for (int i=0; i<players; i++) {
-			getHands().add(null);
-			wins.add(null);
-			accounts.add(initialMoney);
+			pData.add(new PlayerData());
+			getPlayerData(i).setBalance(initialMoney);
 		}
 		
 		//Wait for clients to join
@@ -249,30 +255,28 @@ public class Server extends Thread
 		 //Send info about winners, display winner on server console
 		 System.out.println("");
 		 broadcastAll("GETWINS");
-		 while (wins.contains(null)) {}
+		 for (PlayerData pd: pData) {
+			 while (pd.isSentWins() == false) {}
+		 }
 		 
 		 String msg = "RESULT";
-		 for (int i=0; i<wins.size(); i++) {
-			 if (wins.get(i) == Collections.max(wins)) {
-				 msg += "|"+wins.get(i)+" (winner)";
+		 //Maximal number of wins throughout the game
+		 int maxWins = Collections.max(pData).getWins();
+		 int winsOfPlayer = 0;
+		 for (int i=0; i<players; i++) {
+			 winsOfPlayer = getPlayerData(i).getWins();
+			 if (winsOfPlayer == maxWins) {
+				 msg += "|"+winsOfPlayer+" (winner)";
 				 System.out.println("Player #"+i+" is winner");
 			 }
 			 else
-				 msg +="|"+wins.get(i);
+				 msg +="|"+winsOfPlayer;
 		 }
 		 broadcastAll(msg);
 		 
 		 System.out.println("GAME IS OVER.");
 		 System.exit(0);
 	}
-
-	public static List<Hand> getHands() {
-		return hands;
-	}
-
-	/*public static void setHands(ArrayList<Hand> hands) {
-		Server.hands = hands;
-	}*/
 	
 	public void setHandOfId(int id, String handStr) {
 		Hand hand = null;
@@ -281,17 +285,17 @@ public class Server extends Thread
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		hands.set(id, hand);
+		getPlayerData(id).setHand(hand);
 	}
 	
 	public static String getHandOfId(int id) {
-		Hand hand = hands.get(id);
+		Hand hand = getPlayerData(id).getHand();
 		hand.sort();
 		return hand.toString();
 	}
 	
 	public static void setWinsOfId(int id, int win) {
-    	wins.set(id, win);
+    	getPlayerData(id).setWins(win);
 	}
 	
 	public void detachPlayer(int id) {
@@ -301,7 +305,15 @@ public class Server extends Thread
         	onServerExit();
         }
         players--;
-        getHands().remove(id);
+        pData.remove(id);
         clientThreads.remove(id); //TODO Removal method
+	}
+	
+	public static PlayerData getPlayerData(int id) {
+		return pData.get(id);
+	}
+
+	public static void setWinsSentOfId(int id) {
+		getPlayerData(id).setSentWins();
 	}
 }

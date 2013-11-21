@@ -1,8 +1,9 @@
 package model;
 import java.util.*;
 
-public class Hand {
+public class Hand implements Comparable<Hand> {
 	private List<Card> cards;
+	private HandRank handRank;
 	
 	/**
 	 * Constructs Hand from string
@@ -25,6 +26,7 @@ public class Hand {
 			}
 			cards.add(addedCard);
 		}
+		handRank = new HandRank(cards);
 	}
 	
 	/**
@@ -68,5 +70,14 @@ public class Hand {
 	 */
 	public void sort() {
 		Collections.sort(cards);
+	}
+
+	@Override
+	public int compareTo(Hand o) {
+		return handRank.compareTo(o.getHandRank());
+	}
+
+	public HandRank getHandRank() {
+		return handRank;
 	}
 }

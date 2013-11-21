@@ -7,6 +7,10 @@ public class Human extends Player {
 		connect();
 	}
 	
+	/**
+	 * Documentation and usage available in Player class
+	 * @see Player
+	 */
 	public void promptChange()
 	{
 		int a;

@@ -61,7 +61,7 @@ public class Messenger {
 				performMethod("finalize");
 				break;
 			}
-			//if (!msg.equals("")) System.out.println(msg);
+			//if (!msg.equals("")) System.out.println(msg); // DEBUG
 			
 			if ("END".equals(msg)) {
 				Class cl = listener.getClass();
@@ -88,6 +88,7 @@ public class Messenger {
             else if (msg.startsWith("WINS")) {
             	String[] arr = msg.split("\\|");
             	Server.setWinsOfId(getID(), Integer.parseInt(arr[1]));
+            	Server.setWinsSentOfId(getID());
             }
             else if ("WELCOME".equals(msg)) {
             	System.out.println("Connected to server. Waiting for other players to join...");

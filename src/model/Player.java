@@ -94,6 +94,9 @@ public abstract class Player extends Thread
 	 * e.g.: msgr.broadcast("BET|CALL|0")
 	 * otherwise a deadlock is going to occur
 	 * 
+	 * Available types of bet:
+	 * CHECK BET RAISE CALL FOLD ALLIN
+	 * 
 	 * Account balance is available in field accountBalance of type int
 	 */
 	abstract public void promptBet();

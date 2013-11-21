@@ -14,6 +14,10 @@ public class Bot extends Player
 		connect();
 	}
 
+	/**
+	 * Documentation and usage available in Player class
+	 * @see Player
+	 */
 	@Override
 	public void promptChange()
 	{

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class HandRank implements Comparable<HandRank>
 {
-	protected Hand assessedHand  = null;
+	//protected Hand assessedHand  = null;
 	public int[]  missingCards   = new int[9];  // Missing cards for fixed Poker Hand (ex. bestPokerHand[7] = 1 means that we miss 1 card to have One Pair).
 	public Card[] bestCard       = new Card[9]; // Best card for fixed Poker Hand (ex. bestCard[8] = 'CA' means that best card for High Card we have is Club Ace)
 	public Card[] secondBestCard = new Card[2]; // Two Pairs ([0]) and Full House ([1]) needs extra information about second highest card. 
@@ -54,7 +54,7 @@ public class HandRank implements Comparable<HandRank>
 	
 	public HandRank(Hand h) {
 		this(h.getHand());
-		assessedHand = h;
+		//assessedHand = h;
 	}
 	
 	public int compareTo(HandRank x) // 1 <-> this wins; 0 <-> tie; -1 <-> x wins
@@ -396,8 +396,8 @@ public class HandRank implements Comparable<HandRank>
 		bestCard[8]      = cards.get(cards.size()-1);
 	}
 	
-	public Hand getAssessedHand() {
+	/*public Hand getAssessedHand() {
 		assessedHand.sort();
 		return assessedHand;
-	}
+	}*/
 }

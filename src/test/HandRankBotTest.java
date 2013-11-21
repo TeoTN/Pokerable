@@ -105,7 +105,7 @@ public class HandRankBotTest
         }
         
         private void printTest(HandRankBot testSet) {
-                System.out.println("Assessed hand: "+testSet.getAssessedHand());
+                //System.out.println("Assessed hand: "+testSet.getAssessedHand());
                 for(int i = 0 ; i < 9; i++)
                         System.out.print(testSet.missingCards[i]+" ");
                 System.out.println("");
@@ -113,13 +113,13 @@ public class HandRankBotTest
                         System.out.print(testSet.bestCard[i].toString()+" ");
                 System.out.println("");
                 
-                List<Card> tmp = testSet.getChangeList(testSet.getAssessedHand());
+                //List<Card> tmp = testSet.getChangeList(testSet.getAssessedHand());
                 
-                for(int i = 0 ; i < tmp.size(); i ++){
+                /*for(int i = 0 ; i < tmp.size(); i ++){
                 	System.out.print(tmp.get(i).toString() + " ");
-                }
+                }*/
                 		
-                System.out.print("\n\n");
+                //System.out.print("\n\n");
         }
         
         @Test

@@ -128,7 +128,7 @@ public class HandRankTest
         }
         
         private void printTest(HandRank testSet) {
-                System.out.println("Assessed hand: "+testSet.getAssessedHand());
+                //System.out.println("Assessed hand: "+testSet.getAssessedHand());
                 for(int i = 0 ; i < 9; i++)
                         System.out.print(testSet.missingCards[i]+" ");
                 System.out.println("");
@@ -177,7 +177,7 @@ public class HandRankTest
                 c.add(comparable5);
                 c.add(comparable6);
                 HandRank h = Collections.max(c);
-                System.out.println("WINNER: "+h.getAssessedHand().toString());
+                //System.out.println("WINNER: "+h.getAssessedHand().toString());
         }
         
         @Test
@@ -189,7 +189,7 @@ public class HandRankTest
                 c.add(comparable7);
                 c.add(comparable8);
                 HandRank h = Collections.max(c);
-                System.out.println("WINNER: "+h.getAssessedHand().toString());
+                //System.out.println("WINNER: "+h.getAssessedHand().toString());
         }
         
         @Test

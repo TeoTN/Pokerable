@@ -18,15 +18,15 @@ public class Bot extends Player
 	public void promptChange()
 	{
 		try {
-			hrb = new HandRankBot(hand);
+			hrb = new HandRankBot(getHandToString());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		toChange = hrb.getChangeList(hand);
+		toChange = hrb.getChangeList(getHandToString());
 		System.out.println("I will change "+toChange.size() + " cards.");
-		String msg = hand.toString(); //"HA|SA|CA|DA|HK";
+		String msg = getHandToString(); //"HA|SA|CA|DA|HK";
 		if (toChange.size()>=0 && toChange.size() <=4){
 			for (Card c: toChange) {
 				msg+="|"+c.toString();

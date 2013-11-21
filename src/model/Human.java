@@ -22,10 +22,10 @@ public class Human extends Player {
     	}
     	if (a>=0 && a<5) {
     		if (a!=0) {
-		    	System.out.println("This is your hand: "+hand.toString());
+		    	System.out.println("This is your hand: "+getHandToString());
 		    	System.out.println("Get desc of cards you'd like to change (e.g. S4 D4)");
     		}
-	    	String toChange=hand.toString()+"|"; //CHANGE|...|D4|D5
+	    	String toChange=getHandToString()+"|"; //CHANGE|...|D4|D5
 	    	for (int i=0; i<a; i++) {
 	    		String c = input.next();
 	    		if (c.length()!=2) {
@@ -33,7 +33,7 @@ public class Human extends Player {
 	    			promptChange();
 	    			return;
 	    		}
-	    		if (!hand.includes(c)) {
+	    		if (!handIncludes(c)) {
 	    			System.out.println("You don't have such card. Are you trying to cheat?");
 	    			promptChange();
 	    			return;

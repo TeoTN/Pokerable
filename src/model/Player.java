@@ -90,6 +90,9 @@ public abstract class Player extends Thread
 		return hand.toString();
 	}
 	
+	public boolean handIncludes(String c) {
+		return hand.includes(c);
+	}
 	/**
 	 * Function will change player's hand to that one given in parameter
 	 * @param h New hand of player 

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public final class HandRankBot extends HandRank
 {
+	public HandRankBot(String x) throws Exception {
+		super(new Hand(x));
+	}
+	
 	public HandRankBot(ArrayList<Card> cards){
 		super(cards);
 	}
@@ -37,6 +41,17 @@ public final class HandRankBot extends HandRank
 	
 	public ArrayList<Card> getChangeList(Hand x){
 		return getChangeList(x.getHand());
+	}
+	
+	public ArrayList<Card> getChangeList(String x){
+		ArrayList<Card> ret = null;
+		try {
+			ret = getChangeList(new Hand(x).getHand());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ret;
 	}
 	
 	private ArrayList<Card> getHighCard(ArrayList<Card> cards)

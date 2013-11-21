@@ -77,13 +77,7 @@ public class Messenger {
             else if (msg.startsWith("HAND")) {
             	msg = msg.replace("HAND|", "");
             	System.out.println("Player now #"+getID()+" has hand: "+msg);
-            	performMethod("setHand", msg);     
-            	try {
-					Server.getHands().set(getID(), new Hand(msg));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	performMethod("setHand", msg);
             }
             else if (msg.startsWith("CHANGE")) {
             	performMethod("changeHand", msg.toUpperCase());

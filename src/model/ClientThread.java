@@ -204,6 +204,12 @@ public class ClientThread extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		try {
+			Server.getHands().set(getID(), new Hand(h));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public String getHand() {

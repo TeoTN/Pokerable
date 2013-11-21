@@ -1,6 +1,7 @@
 package model;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 public class HandRank implements Comparable<HandRank>
@@ -23,7 +24,7 @@ public class HandRank implements Comparable<HandRank>
 	 *  0 - straight flush
 	 * @param cards
 	 */
-	public HandRank(ArrayList<Card> cards)
+	public HandRank(List<Card> cards)
 	{
 		Collections.sort(cards); // Lowest to highest
 		
@@ -103,7 +104,7 @@ public class HandRank implements Comparable<HandRank>
 	}
 
 
-	protected void checkStraightFlush(ArrayList<Card> cards)
+	protected void checkStraightFlush(List<Card> cards)
 	{
 		int[] anyCard = new int[14];
 		for(int i = 0 ; i < 14 ; i ++){
@@ -171,7 +172,7 @@ public class HandRank implements Comparable<HandRank>
 		}
 	}
 
-	protected void checkFour(ArrayList<Card> cards)
+	protected void checkFour(List<Card> cards)
 	{
 		for(int i = cards.size()-1 ; i >= 0  ; i --)
 		{
@@ -195,7 +196,7 @@ public class HandRank implements Comparable<HandRank>
 		bestCard[1]     = bestCard[5];
 	}
 
-	protected void checkFull(ArrayList<Card> cards)
+	protected void checkFull(List<Card> cards)
 	{
 		if(missingCards[5] == 0 && missingCards[6] == 0){
 			missingCards[2]   = 0;
@@ -230,12 +231,12 @@ public class HandRank implements Comparable<HandRank>
 		secondBestCard[1] = secondBestCard[0];
 	}
 
-	protected void checkFlush(ArrayList<Card> cards)
+	protected void checkFlush(List<Card> cards)
 	{
-		ArrayList<Integer> Spades   = new ArrayList<Integer>();
-		ArrayList<Integer> Hearts   = new ArrayList<Integer>();
-		ArrayList<Integer> Diamonds = new ArrayList<Integer>();
-		ArrayList<Integer> Clubs    = new ArrayList<Integer>();
+		List<Integer> Spades   = new ArrayList<Integer>();
+		List<Integer> Hearts   = new ArrayList<Integer>();
+		List<Integer> Diamonds = new ArrayList<Integer>();
+		List<Integer> Clubs    = new ArrayList<Integer>();
 		
 		for(int i = 0 ; i < cards.size() ; i ++)
 		{
@@ -277,7 +278,7 @@ public class HandRank implements Comparable<HandRank>
 		}
 	}
 
-	protected void checkStraight(ArrayList<Card> cards)
+	protected void checkStraight(List<Card> cards)
 	{
 		int[] anyCard = new int[14];
 		
@@ -316,7 +317,7 @@ public class HandRank implements Comparable<HandRank>
 		}
 	}
 	
-	protected void checkThree(ArrayList<Card> cards)
+	protected void checkThree(List<Card> cards)
 	{
 		for(int i = cards.size()-1 ; i >= 0  ; i --)
 		{
@@ -337,7 +338,7 @@ public class HandRank implements Comparable<HandRank>
 		bestCard[5] = bestCard[7];
 	}
 
-	protected void checkTwoPair(ArrayList<Card> cards)
+	protected void checkTwoPair(List<Card> cards)
 	{
 		boolean foundOnePair = false;
 		
@@ -372,7 +373,7 @@ public class HandRank implements Comparable<HandRank>
 		}
 	}
 
-	protected void checkOnePair(ArrayList<Card> cards)
+	protected void checkOnePair(List<Card> cards)
 	{
 		for(int i = cards.size()-1 ; i >= 0  ; i --)
 		{
@@ -390,7 +391,7 @@ public class HandRank implements Comparable<HandRank>
 		bestCard[7]      = cards.get(cards.size()-1);
 	}
 
-	protected void checkHighCard(ArrayList<Card> cards) {
+	protected void checkHighCard(List<Card> cards) {
 		missingCards[8]  = 0;
 		bestCard[8]      = cards.get(cards.size()-1);
 	}

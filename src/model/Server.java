@@ -3,6 +3,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -17,10 +18,10 @@ public class Server extends Thread
 	private int port;
 	Scanner input;
 	int players=0;
-	static ArrayList<ClientThread> clientThreads;
-	private static ArrayList<Hand> hands;
+	static List<ClientThread> clientThreads;
+	private static List<Hand> hands;
 	static int changedHands=0;
-	public static ArrayList<Integer> wins;
+	public static List<Integer> wins;
 	private static Server instance;
 	
 	private Server() throws Exception {
@@ -33,7 +34,7 @@ public class Server extends Thread
 		init();
 	}
 	
-	public static Server getInstance() {
+	public static synchronized Server getInstance() {
 		if (instance == null) {
 			try {
 				instance = new Server();
@@ -44,7 +45,7 @@ public class Server extends Thread
 		return instance;
 	}
 	
-	public static Server getInstance(int port) {
+	public static synchronized Server getInstance(int port) {
 		if (instance == null) {
 			try {
 				instance = new Server(port);
@@ -75,7 +76,6 @@ public class Server extends Thread
 		try {
 			finalize();
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.exit(-1);
@@ -95,7 +95,6 @@ public class Server extends Thread
 			try {
 				h = currPlayer.generateHand();
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
@@ -179,7 +178,7 @@ public class Server extends Thread
 		}
 		
 		wins = new ArrayList<Integer>();
-		setHands(new ArrayList<Hand>());
+		hands = new ArrayList<Hand>();
 		for (int i=0; i<players; i++) {
 			getHands().add(null);
 			wins.add(null);
@@ -239,13 +238,13 @@ public class Server extends Thread
 		 System.exit(0);
 	}
 
-	public static ArrayList<Hand> getHands() {
+	public static List<Hand> getHands() {
 		return hands;
 	}
 
-	public static void setHands(ArrayList<Hand> hands) {
+	/*public static void setHands(ArrayList<Hand> hands) {
 		Server.hands = hands;
-	}
+	}*/
 	
 	public void setHandOfId(int id, String handStr) {
 		Hand hand = null;
@@ -261,6 +260,10 @@ public class Server extends Thread
 		Hand hand = hands.get(id);
 		hand.sort();
 		return hand.toString();
+	}
+	
+	public static void setWinsOfId(int id, int win) {
+    	wins.set(id, win);
 	}
 	
 	public void detachPlayer(int id) {

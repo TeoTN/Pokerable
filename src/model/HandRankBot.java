@@ -1,5 +1,6 @@
 package model;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public final class HandRankBot extends HandRank
@@ -8,7 +9,7 @@ public final class HandRankBot extends HandRank
 		super(new Hand(x));
 	}
 	
-	public HandRankBot(ArrayList<Card> cards){
+	public HandRankBot(List<Card> cards){
 		super(cards);
 	}
 	
@@ -16,7 +17,7 @@ public final class HandRankBot extends HandRank
 		super(x);
 	}
 	
-	public ArrayList<Card> getChangeList(ArrayList<Card> cards)
+	public List<Card> getChangeList(List<Card> cards)
 	{
 		for(int i = 0 ; i < 9 ; i ++)
 		{
@@ -39,24 +40,23 @@ public final class HandRankBot extends HandRank
 		return null;
 	}
 	
-	public ArrayList<Card> getChangeList(Hand x){
+	public List<Card> getChangeList(Hand x){
 		return getChangeList(x.getHand());
 	}
 	
-	public ArrayList<Card> getChangeList(String x){
-		ArrayList<Card> ret = null;
+	public List<Card> getChangeList(String x){
+		List<Card> ret = null;
 		try {
 			ret = getChangeList(new Hand(x).getHand());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return ret;
 	}
 	
-	private ArrayList<Card> getHighCard(ArrayList<Card> cards)
+	private List<Card> getHighCard(List<Card> cards)
 	{
-		ArrayList<Card> ret = new ArrayList<Card>();
+		List<Card> ret = new ArrayList<Card>();
 		
 		for(int i = 0 ; i < cards.size() ; i ++)
 		{
@@ -68,9 +68,9 @@ public final class HandRankBot extends HandRank
 		return ret;
 	}
 
-	private ArrayList<Card> getOnePair(ArrayList<Card> cards)
+	private List<Card> getOnePair(List<Card> cards)
 	{
-		ArrayList<Card> ret = new ArrayList<Card>();
+		List<Card> ret = new ArrayList<Card>();
 		
 		for(int i = 0 ; i < cards.size() ; i ++)
 		{
@@ -82,9 +82,9 @@ public final class HandRankBot extends HandRank
 		return ret;
 	}
 
-	private ArrayList<Card> getTwoPair(ArrayList<Card> cards)
+	private List<Card> getTwoPair(List<Card> cards)
 	{
-		ArrayList<Card> ret = new ArrayList<Card>();
+		List<Card> ret = new ArrayList<Card>();
 		
 		for(int i = 0 ; i < cards.size() ; i ++)
 		{
@@ -96,9 +96,9 @@ public final class HandRankBot extends HandRank
 		return ret;
 	}
 
-	private ArrayList<Card> getThree(ArrayList<Card> cards)
+	private List<Card> getThree(List<Card> cards)
 	{
-		ArrayList<Card> ret = new ArrayList<Card>();
+		List<Card> ret = new ArrayList<Card>();
 		
 		for(int i = 0 ; i < cards.size() ; i ++)
 		{
@@ -110,9 +110,9 @@ public final class HandRankBot extends HandRank
 		return ret;
 	}
 
-	private ArrayList<Card> getStraight(ArrayList<Card> cards)
+	private List<Card> getStraight(List<Card> cards)
 	{
-		ArrayList<Card> ret = new ArrayList<Card>();
+		List<Card> ret = new ArrayList<Card>();
 		
 		int minValue = 13;
 		for(int i = 0 ; i < cards.size() ; i ++)
@@ -135,9 +135,9 @@ public final class HandRankBot extends HandRank
 		return ret;
 	}
 
-	private ArrayList<Card> getFlush(ArrayList<Card> cards)
+	private List<Card> getFlush(List<Card> cards)
 	{
-		ArrayList<Card> ret = new ArrayList<Card>();
+		List<Card> ret = new ArrayList<Card>();
 		
 		for(int i = 0 ; i < cards.size() ; i ++)
 		{
@@ -149,9 +149,9 @@ public final class HandRankBot extends HandRank
 		return ret;
 	}
 
-	private ArrayList<Card> getFullHouse(ArrayList<Card> cards)
+	private List<Card> getFullHouse(List<Card> cards)
 	{
-		ArrayList<Card> ret = new ArrayList<Card>();
+		List<Card> ret = new ArrayList<Card>();
 		
 		for(int i = 0 ; i < cards.size() ; i ++)
 		{
@@ -163,9 +163,9 @@ public final class HandRankBot extends HandRank
 		return ret;
 	}
 
-	private ArrayList<Card> getFour(ArrayList<Card> cards)
+	private List<Card> getFour(List<Card> cards)
 	{
-		ArrayList<Card> ret = new ArrayList<Card>();
+		List<Card> ret = new ArrayList<Card>();
 		
 		for(int i = 0 ; i < cards.size() ; i ++)
 		{
@@ -177,9 +177,9 @@ public final class HandRankBot extends HandRank
 		return ret;
 	}
 
-	private ArrayList<Card> getStraightFlush(ArrayList<Card> cards)
+	private List<Card> getStraightFlush(List<Card> cards)
 	{
-		ArrayList<Card> ret = new ArrayList<Card>();
+		List<Card> ret = new ArrayList<Card>();
 		
 		int minValue = 13;
 		for(int i = 0 ; i < cards.size() ; i ++)

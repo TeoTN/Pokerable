@@ -1,10 +1,10 @@
 package model;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Bot extends Player
 {
 	private HandRankBot hrb;
-	private ArrayList<Card> toChange;
+	private List<Card> toChange;
 
 	Bot(String host, int port) {
 		super(host, port);

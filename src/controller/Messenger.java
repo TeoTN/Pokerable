@@ -64,7 +64,9 @@ public class Messenger {
 			//if (!msg.equals("")) System.out.println(msg);
 			
 			if ("END".equals(msg)) {
-            	if (listener.getClass().getName().equals("Player")) {
+				Class cl = listener.getClass();
+				String nameOfClass = cl.getName();
+            	if (nameOfClass.equals("Player")) {
             		System.out.println("Server has been shut down.");
             		performMethod("finalize");
             	}
@@ -85,7 +87,7 @@ public class Messenger {
             }
             else if (msg.startsWith("WINS")) {
             	String[] arr = msg.split("\\|");
-            	Server.wins.set(getID(), Integer.parseInt(arr[1]));
+            	Server.setWinsOfId(getID(), Integer.parseInt(arr[1]));
             }
             else if ("WELCOME".equals(msg)) {
             	System.out.println("Connected to server. Waiting for other players to join...");

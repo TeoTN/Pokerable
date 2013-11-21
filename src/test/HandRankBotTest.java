@@ -3,6 +3,7 @@ import model.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -113,7 +114,7 @@ public class HandRankBotTest
                         System.out.print(testSet.bestCard[i].toString()+" ");
                 System.out.println("");
                 
-                ArrayList<Card> tmp = testSet.getChangeList(testSet.getAssessedHand());
+                List<Card> tmp = testSet.getChangeList(testSet.getAssessedHand());
                 
                 for(int i = 0 ; i < tmp.size(); i ++){
                 	System.out.print(tmp.get(i).toString() + " ");

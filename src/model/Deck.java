@@ -12,7 +12,7 @@ public class Deck
 	 * Array of cards in the deck
 	 */
 	private static Deck instance;
-	private ArrayList<Card> cards;
+	private List<Card> cards;
 	private Character[] CardList = {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
 	
 	

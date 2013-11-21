@@ -39,7 +39,7 @@
   </class>  
   <class id="5" language="java" name="model.Deck" project="Pokerable" file="/Pokerable/src/model/Deck.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="316" y="841"/>    
+    <position height="-1" width="-1" x="336" y="840"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="model.Bot" project="Pokerable" file="/Pokerable/src/model/Bot.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="878" y="810"/>    
+    <position height="-1" width="-1" x="915" y="839"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="model.Human" project="Pokerable" file="/Pokerable/src/model/Human.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1068" y="810"/>    
+    <position height="-1" width="-1" x="1053" y="854"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -75,7 +75,7 @@
   </class>  
   <class id="9" language="java" name="model.Hand" project="Pokerable" file="/Pokerable/src/model/Hand.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="153" width="157" x="525" y="435"/>    
+    <position height="-1" width="-1" x="576" y="598"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -107,6 +107,8 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <generalization id="19">    
+    <bendpoint x="1053" y="648"/>    
+    <bendpoint x="1011" y="648"/>    
     <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="2"/>  
   </generalization>  
@@ -127,6 +129,7 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="26">    
+    <bendpoint x="762" y="598"/>    
     <end type="SOURCE" refId="2" navigable="false">      
       <attribute id="27" name="hand"/>      
       <multiplicity id="28" minimum="0" maximum="1"/>    
@@ -159,10 +162,13 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <generalization id="38">    
+    <bendpoint x="916" y="647"/>    
+    <bendpoint x="959" y="648"/>    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="2"/>  
   </generalization>  
   <association id="39">    
+    <bendpoint x="255" y="598"/>    
     <end type="SOURCE" refId="1" navigable="false">      
       <attribute id="40" name="hands"/>      
       <multiplicity id="41" minimum="0" maximum="2147483647"/>    

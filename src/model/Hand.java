@@ -2,7 +2,7 @@ package model;
 import java.util.*;
 
 public class Hand {
-	private ArrayList<Card> cards;
+	private List<Card> cards;
 	
 	/**
 	 * Constructs Hand from string
@@ -31,7 +31,7 @@ public class Hand {
 	 * Function giving poker hand.
 	 * @return Sorted list of cards in our hand.
 	 */
-	public ArrayList<Card> getHand(){
+	public List<Card> getHand(){
 		sort();
 		return cards;
 	}

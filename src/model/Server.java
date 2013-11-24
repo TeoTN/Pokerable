@@ -27,6 +27,7 @@ public class Server extends Thread
 	//public static List<Integer> wins;
 	private static Server instance;
 	
+	
 	private Server() throws Exception {
 		this(1700);
 	}
@@ -188,8 +189,10 @@ public class Server extends Thread
 			String r = input.next();
 			try {
 				games = Integer.parseInt(r);
+				if (games<1) throw new NumberFormatException();
 			}
 			catch (NumberFormatException e) {
+				games = 0;
 				System.err.println("Incorrect number of rounds was provided. Try again.");
 				continue;
 			}
@@ -197,12 +200,15 @@ public class Server extends Thread
 		
 		//Prompt user to specify how much money players will initially have
 		while (initialMoney == 0) {
-			System.out.println("How much money shall players initially have?");
+			System.out.println("How much money shall players initially have (min. 10)?");
 			String r = input.next();
 			try {
 				initialMoney = Integer.parseInt(r);
+				if (initialMoney < 10)
+					throw new NumberFormatException();
 			}
 			catch (NumberFormatException e) {
+				initialMoney = 0;
 				System.err.println("Incorrect amount of money was provided. Try again.");
 				continue;
 			}
@@ -261,16 +267,20 @@ public class Server extends Thread
 		 
 		 String msg = "RESULT";
 		 //Maximal number of wins throughout the game
+		 PlayerData pd;
 		 int maxWins = Collections.max(pData).getWins();
 		 int winsOfPlayer = 0;
+		 String name;
 		 for (int i=0; i<players; i++) {
-			 winsOfPlayer = getPlayerData(i).getWins();
+			 pd = getPlayerData(i);
+			 winsOfPlayer = pd.getWins();
+			 name = pd.getName();
 			 if (winsOfPlayer == maxWins) {
-				 msg += "|"+winsOfPlayer+" (winner)";
-				 System.out.println("Player #"+i+" is winner");
+				 msg += "|"+name+"|"+winsOfPlayer+" (winner)";
+				 System.out.println("Player "+name+" is winner");
 			 }
 			 else
-				 msg +="|"+winsOfPlayer;
+				 msg +="|"+name+"|"+winsOfPlayer;
 		 }
 		 broadcastAll(msg);
 		 
@@ -279,6 +289,7 @@ public class Server extends Thread
 	}
 	
 	public void setHandOfId(int id, String handStr) {
+    	System.out.println("Player "+getPlayerData(id).getName()+" now has hand: "+handStr);
 		Hand hand = null;
 		try {
 			hand = new Hand(handStr);

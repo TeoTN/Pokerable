@@ -50,4 +50,9 @@ public class Bot extends Player
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void promptName() {
+		msgr.broadcast("SETNAME|Bot");
+	}
 }

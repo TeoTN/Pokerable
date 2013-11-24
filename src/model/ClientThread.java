@@ -21,6 +21,7 @@ public class ClientThread extends Thread {
 	private Deck deck;
 	static int allowedThread=0;
 	static Object lock = null;
+	static int highestBet = 0;
     
     /**
      * Constructor for instantiation
@@ -121,13 +122,39 @@ public class ClientThread extends Thread {
 	 * 
 	 * Allowed thread is changed in order to prevent dead lock
 	 * 
-	 * @param params Data describing bet [type]|[amount]
+	 * @param param Data describing bet [type]|[amount]
 	 */
-	public void bet(String params) {
+	public void bet(String param) {
+		String[] params = param.split("\\|");
+		PlayerData pd;
+		pd = Server.getPlayerData(id);
+		int currentBalance = pd.getBalance(); 
+		switch (params[0]) {
+			case "CHECK":
+
+				break;
+			case "BET":
+				break;
+			case "RAISE":
+				break;
+			case "CALL":
+				break;
+			case "FOLD":
+				break;
+			case "ALLIN":
+				break;
+		}
 		synchronized (lock) {
     		allowedThread=(allowedThread+1)%(Server.clientThreads.size());
     		lock.notifyAll();
     	}
+	}
+	
+	public void setPlayerName(String name) {
+		if (name.equals("Player") || name.equals("Bot"))
+			name+=" "+String.valueOf(id);
+		Server.getPlayerData(id).setName(name);
+		System.out.println("Player #"+id+" is now: "+name);
 	}
 	
 	public Hand generateHand() throws Exception {
@@ -156,7 +183,7 @@ public class ClientThread extends Thread {
 	}
 	
     @Override
-    protected void finalize() {
+    public void finalize() {
         System.out.println("Player #"+id+" has left the table.");
         getServer().detachPlayer(id);
         try {

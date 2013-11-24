@@ -61,7 +61,7 @@ public class Messenger {
 				performMethod("finalize");
 				break;
 			}
-			//if (!msg.equals("")) System.out.println(msg); // DEBUG
+			if (!msg.equals("")) System.out.println("  { DEBUG: "+msg+"}"); // DEBUG
 			
 			if ("END".equals(msg)) {
 				Class cl = listener.getClass();
@@ -78,7 +78,6 @@ public class Messenger {
             }
             else if (msg.startsWith("HAND")) {
             	msg = msg.replace("HAND|", "");
-            	System.out.println("Player now #"+getID()+" has hand: "+msg);
             	performMethod("setHand", msg);
             }
             else if (msg.startsWith("CHANGE")) {
@@ -96,6 +95,10 @@ public class Messenger {
             else if (msg.startsWith("SETHAND")) {
             	msg = msg.replace("SETHAND|", "");
             	performMethod("setHand", msg);
+            }
+            else if (msg.startsWith("SETNAME")) {
+            	msg = msg.replace("SETNAME|", "");
+            	performMethod("setPlayerName", msg);
             }
             else if (msg.startsWith("PROMPTCHANGE")) {
             	performMethod("promptChange"); 
@@ -131,7 +134,7 @@ public class Messenger {
             	String arr[] = msg.split("\\|");
             	System.out.println("\nRESULTS:");
             	for (int i=1; i<arr.length; i++) {
-            		System.out.println("Player #"+(i-1)+" has scored: "+arr[i]);
+            		System.out.println("Player "+arr[i]+" has scored: "+arr[i+1]);
             	}
             }
             else if (msg.startsWith("ERROR")) {

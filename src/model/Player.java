@@ -62,6 +62,7 @@ public abstract class Player extends Thread
 	    }
 	    msgr = new Messenger(this);
 	    msgr.broadcast("CONNECTED");
+	    promptName();
 	    msgr.receive();
 	}
 	
@@ -80,6 +81,8 @@ public abstract class Player extends Thread
 	public PrintWriter getOutputStream() {
 		return out;
 	}
+	
+	public abstract void promptName();
 	
 	/**
 	 * Function MUST answer with message covering pattern: 

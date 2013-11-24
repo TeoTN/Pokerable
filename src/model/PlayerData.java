@@ -5,12 +5,14 @@ public class PlayerData implements Comparable<PlayerData> {
 	private String name;
 	private int balance,  wins;
 	private boolean sentWins;
+	private boolean inGame;
 	
 	public PlayerData() {
 		hand = null;
 		name = null;
 		balance = wins = 0;
 		sentWins = false;
+		inGame = true;
 	}
 	
 	public String getName() {
@@ -62,5 +64,13 @@ public class PlayerData implements Comparable<PlayerData> {
 
 	public boolean isSentWins() {
 		return sentWins;
+	}
+
+	public boolean isInGame() {
+		return inGame;
+	}
+
+	public void setInGame(boolean inGame) {
+		this.inGame = inGame;
 	}
 }

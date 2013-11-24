@@ -176,7 +176,8 @@ public class HandRankTest
                 ArrayList<HandRank> c = new ArrayList<HandRank>();
                 c.add(comparable5);
                 c.add(comparable6);
-                HandRank h = Collections.max(c);
+                @SuppressWarnings("unused")
+				HandRank h = Collections.max(c);
                 //System.out.println("WINNER: "+h.getAssessedHand().toString());
         }
         
@@ -188,7 +189,8 @@ public class HandRankTest
                 ArrayList<HandRank> c = new ArrayList<HandRank>();
                 c.add(comparable7);
                 c.add(comparable8);
-                HandRank h = Collections.max(c);
+                @SuppressWarnings("unused")
+				HandRank h = Collections.max(c);
                 //System.out.println("WINNER: "+h.getAssessedHand().toString());
         }
         

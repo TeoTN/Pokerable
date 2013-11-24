@@ -82,7 +82,7 @@ public final class BotStrategy
 				
 				if(bluff == 13){
 					amIBluffing = true;
-					return strategy1(accountBalance, biddingRoundNumber, startBalance, currentBalance, false, hrb);
+					return strategy1(accountBalance, biddingRoundNumber, startBalance, currentBalance, false, hrb)+"F";
 				}
 				
 				if(currentBalance == 0){
@@ -99,7 +99,7 @@ public final class BotStrategy
 				
 				if(bluff == 13){
 					amIBluffing = true;
-					return strategy1(accountBalance, biddingRoundNumber, startBalance, currentBalance, false, hrb);
+					return strategy1(accountBalance, biddingRoundNumber, startBalance, currentBalance, false, hrb)+"F";
 				}
 				
 				if(currentBalance == 0){
@@ -115,7 +115,7 @@ public final class BotStrategy
 				
 				if(bluff == 13){
 					amIBluffing = true;
-					return strategy1(accountBalance, biddingRoundNumber, startBalance, currentBalance, false, hrb);
+					return strategy1(accountBalance, biddingRoundNumber, startBalance, currentBalance, false, hrb)+"F";
 				}
 				
 				if(currentBalance == 0){
@@ -133,7 +133,7 @@ public final class BotStrategy
 					
 					if(bluff == 1){
 						amIBluffing = true;
-						return strategy1(accountBalance, biddingRoundNumber, startBalance, currentBalance, false, hrb);
+						return strategy1(accountBalance, biddingRoundNumber, startBalance, currentBalance, false, hrb)+"F";
 					}
 					
 					if(currentBalance == 0){

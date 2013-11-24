@@ -5,9 +5,11 @@ public class Bot extends Player
 {
 	private HandRankBot hrb;
 	private List<Card> toChange;
+	private boolean cheating;
 
 	Bot(String host, int port) {
 		super(host, port);
+		cheating = false;
 	}
 	
 	public void run() {
@@ -45,12 +47,18 @@ public class Bot extends Player
 	 * Documentation and usage available in Player class
 	 * @see Player
 	 * @param String
-	 *		Nr licytacji | Pocz¹tkowy stan konta (z pocz¹tku rundy) | Aktualna stawka
+	 *		Nr licytacji | Poczï¿½tkowy stan konta (z poczï¿½tku rundy) | Aktualna stawka
 	 */
 	@Override
 	public void promptBet() 
 	{
-		String out = BotStrategy.strategy1(accountBalance, 0, 0, 0, false, hrb);
+		String out = BotStrategy.strategy1(accountBalance, 0, 0, 0, cheating, hrb);
+		
+		if(out.charAt(out.length()-1)) == 'F'){
+			cheating = true;
+			out = out.substring(0, out.length()-1);
+		}
+		
 		msgr.broadcast("BET|" + out);
 	}
 

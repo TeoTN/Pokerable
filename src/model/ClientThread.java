@@ -157,10 +157,11 @@ public class ClientThread extends Thread {
 			case "RAISE":
 				bet = Integer.parseInt(params[1]);
 				if (currentBalance >= (highestBet - previousBet + bet)) {
-					highestBet += bet;
 					previousBet = highestBet + bet;
+					highestBet += bet;
 					currentBalance -= (highestBet - previousBet + bet);
 					isDone = true;
+					System.out.println("Player "+myName+" is raising ("+bet+")");
 				}
 				else {
 					msgr.broadcast("ERROR|BET|You have insufficient funds to raise highest bet.");
@@ -171,6 +172,7 @@ public class ClientThread extends Thread {
 					previousBet = highestBet;
 					currentBalance -= highestBet - previousBet;
 					isDone = true;
+					System.out.println("Player "+myName+" is calling");
 				}
 				else {
 					msgr.broadcast("ERROR|BET|You have insufficient funds to match previous bet.");
@@ -179,6 +181,7 @@ public class ClientThread extends Thread {
 			case "FOLD":
 				pd.setInGame(false);
 				isDone = true;
+				System.out.println("Player "+myName+" is folding");
 				break;
 			case "ALLIN":
 				if (currentBalance > 0) {
@@ -186,6 +189,7 @@ public class ClientThread extends Thread {
 					previousBet = currentBalance;
 					currentBalance = 0;
 					isDone = true;
+					System.out.println("Player "+myName+" is all-in");
 				}
 				else {
 					msgr.broadcast("ERROR|BET|You have no money.");

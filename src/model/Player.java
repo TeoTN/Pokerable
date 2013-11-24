@@ -13,7 +13,7 @@ import controller.Messenger;
 public abstract class Player extends Thread
 {
 	protected Messenger msgr;
-	private int accountBalance;
+	protected int accountBalance;
 	int wins;		//number of won games
 	Hand hand;		//hand
 	int account;	//amount of cash the player has

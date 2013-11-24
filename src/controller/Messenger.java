@@ -61,7 +61,7 @@ public class Messenger {
 				performMethod("finalize");
 				break;
 			}
-			if (!msg.equals("")) System.out.println("  { DEBUG: "+msg+"}"); // DEBUG
+			//if (!msg.equals("")) System.out.println("  { DEBUG: "+msg+"}"); // DEBUG
 			
 			if ("END".equals(msg)) {
 				Class cl = listener.getClass();

@@ -121,12 +121,19 @@ public class Server extends Thread
 				 currPlayer.queueBroadcast("PROMPTBET");
 			 }
 		 	 
-		 	 while (numberOfBets < players) {}
+		 	 while (numberOfBets < players) {
+		 		 //System.err.print(numberOfBets);
+		 		 try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		 	 }
 		 	 
 			 for (ClientThread cth: clientThreads) {
 				 PlayerData pd = getPlayerData(cth.getID());
 				 
-				 System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
+				 //System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
 				 
 				 if (pd.isInGame() == true && pd.getPreviousBet() != ClientThread.getHighestBet()) {
 					 numberOfBets = 0;
@@ -139,18 +146,25 @@ public class Server extends Thread
 			 currPlayer.queueBroadcast("PROMPTCHANGE");
 		 }
 
-		 //Ask players for second BET
+		 //Ask players for second bet
 		 while (numberOfBets == 0) {
 		 	 for (ClientThread currPlayer: clientThreads) {
 				 currPlayer.queueBroadcast("PROMPTBET");
 			 }
 		 	 
-		 	 while (numberOfBets < players) {}
+		 	 while (numberOfBets < players) {
+		 		 //System.err.print(numberOfBets);
+		 		 try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		 	 }
 		 	 
 			 for (ClientThread cth: clientThreads) {
 				 PlayerData pd = getPlayerData(cth.getID());
 				 
-				 System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
+				 //System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
 				 
 				 if (pd.isInGame() == true && pd.getPreviousBet() != ClientThread.getHighestBet()) {
 					 numberOfBets = 0;

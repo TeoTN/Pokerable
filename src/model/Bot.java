@@ -30,7 +30,7 @@ public class Bot extends Player
 		
 		toChange = hrb.getChangeList(getHandToString());
 		System.out.println("I will change "+toChange.size() + " cards.");
-		String msg = getHandToString(); //"HA|SA|CA|DA|HK";
+		String msg = getHandToString();
 		if (toChange.size()>=0 && toChange.size() <=4){
 			for (Card c: toChange) {
 				msg+="|"+c.toString();
@@ -44,11 +44,14 @@ public class Bot extends Player
 	/**
 	 * Documentation and usage available in Player class
 	 * @see Player
+	 * @param String
+	 *		Nr licytacji | Pocz¹tkowy stan konta (z pocz¹tku rundy) | Aktualna stawka
 	 */
 	@Override
-	public void promptBet() {
-		// TODO Auto-generated method stub
-		
+	public void promptBet() 
+	{
+		String out = BotStrategy.strategy1(accountBalance, 0, 0, 0, false, hrb);
+		msgr.broadcast("BET|" + out);
 	}
 
 	@Override

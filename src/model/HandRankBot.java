@@ -17,6 +17,17 @@ public final class HandRankBot extends HandRank
 		super(x);
 	}
 	
+	public int getBestId()
+	{
+		for(int i = 0 ; i < 9 ; i ++)
+		{
+			if(missingCards[i] == 0){
+				return i;
+			}
+		}
+		return 10;
+	}
+	
 	public List<Card> getChangeList(List<Card> cards)
 	{
 		for(int i = 0 ; i < 9 ; i ++)

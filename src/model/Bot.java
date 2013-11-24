@@ -54,7 +54,7 @@ public class Bot extends Player
 	{
 		String out = BotStrategy.strategy1(accountBalance, 0, 0, 0, cheating, hrb);
 		
-		if(out.charAt(out.length()-1)) == 'F'){
+		if(out.charAt(out.length()-1) == 'F'){
 			cheating = true;
 			out = out.substring(0, out.length()-1);
 		}

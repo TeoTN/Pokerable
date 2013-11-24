@@ -52,7 +52,7 @@ public class Bot extends Player
 	}
 
 	@Override
-	public void promptName() {
-		msgr.broadcast("SETNAME|Bot");
+	public String promptName() {
+		return "Bot";
 	}
 }

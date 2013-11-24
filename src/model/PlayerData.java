@@ -3,14 +3,14 @@ package model;
 public class PlayerData implements Comparable<PlayerData> {
 	private Hand hand;
 	private String name;
-	private int balance,  wins;
+	private int balance,  wins, previousBet;
 	private boolean sentWins;
 	private boolean inGame;
 	
 	public PlayerData() {
 		hand = null;
 		name = null;
-		balance = wins = 0;
+		previousBet = balance = wins = 0;
 		sentWins = false;
 		inGame = true;
 	}
@@ -76,5 +76,13 @@ public class PlayerData implements Comparable<PlayerData> {
 
 	public void setInGame(boolean inGame) {
 		this.inGame = inGame;
+	}
+
+	public int getPreviousBet() {
+		return previousBet;
+	}
+
+	public void setPreviousBet(int previousBet) {
+		this.previousBet = previousBet;
 	}
 }

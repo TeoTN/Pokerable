@@ -66,10 +66,10 @@ public class Human extends Player {
 		msgr.broadcast("SETBET|"+params);
 	}
 	@Override
-	public void promptName() {
+	public String promptName() {
 		System.out.println("Enter your name:");
 		String name = "Player";
 		name = input.nextLine();
-		msgr.broadcast("SETNAME|"+name);
+		return name;
 	}
 }

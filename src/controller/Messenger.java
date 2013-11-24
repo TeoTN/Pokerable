@@ -72,8 +72,10 @@ public class Messenger {
             	}
                 return;
             }
-            else if ("CONNECTED".equals(msg)) {
+            else if (msg.startsWith("CONNECTED")) {
             	System.out.println("Client connected.");
+            	msg = msg.replace("CONNECTED|", "");
+            	performMethod("setPlayerName", msg);
             	broadcast("WELCOME");
             }
             else if (msg.startsWith("HAND")) {
@@ -95,10 +97,6 @@ public class Messenger {
             else if (msg.startsWith("SETHAND")) {
             	msg = msg.replace("SETHAND|", "");
             	performMethod("setHand", msg);
-            }
-            else if (msg.startsWith("SETNAME")) {
-            	msg = msg.replace("SETNAME|", "");
-            	performMethod("setPlayerName", msg);
             }
             else if (msg.startsWith("PROMPTCHANGE")) {
             	performMethod("promptChange"); 

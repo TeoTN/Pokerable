@@ -22,7 +22,6 @@ public class ClientThread extends Thread {
 	static int allowedThread=0;
 	static Object lock = null;
 	static int highestBet = 0;
-	private int previousBet = 0;
 	private String myName;
     
     /**
@@ -130,6 +129,7 @@ public class ClientThread extends Thread {
 		int currentBalance = pd.getBalance(); 
 		boolean isDone = false;
 		int bet = 0;
+		int previousBet = pd.getPreviousBet();
 		switch (params[0]) {
 			case "CHECK":
 				if (highestBet != 0) {
@@ -194,10 +194,12 @@ public class ClientThread extends Thread {
 				}
 				break;
 		}
+		//TODO Broadcast all queueBroadcast("LASTBET|"+myName+"|"+previousBet);
 		if (isDone == true) {
 			pd.setBalance(currentBalance);
+			pd.setPreviousBet(previousBet);
+			Server.incNumberOfBets();
 			moveLockToNextPlayer();
-			
 		}
 	}
 	
@@ -304,5 +306,9 @@ public class ClientThread extends Thread {
 	
 	public Server getServer() {
 		return Server.getInstance();
+	}
+
+	public static int getHighestBet() {
+		return highestBet;
 	}
 }/* END OF CLASS ClientThread */

@@ -61,8 +61,8 @@ public abstract class Player extends Thread
 	    	e.printStackTrace();
 	    }
 	    msgr = new Messenger(this);
-	    msgr.broadcast("CONNECTED");
-	    promptName();
+	    String name = promptName();
+	    msgr.broadcast("CONNECTED|"+name);
 	    msgr.receive();
 	}
 	
@@ -82,7 +82,7 @@ public abstract class Player extends Thread
 		return out;
 	}
 	
-	public abstract void promptName();
+	public abstract String promptName();
 	
 	/**
 	 * Function MUST answer with message covering pattern: 

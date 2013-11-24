@@ -24,6 +24,7 @@ public class Server extends Thread
 	static int changedHands=0;
 	private static Server instance;
 	private static int pot=0;
+	private static int numberOfBets = 0;
 	
 	private Server() throws Exception {
 		this(1700);
@@ -96,6 +97,7 @@ public class Server extends Thread
 		 //Reset variables
 		 changedHands = 0;
 		 setPot(0);
+		 numberOfBets = 0;
 		 
 		 //Give players their hands
 		 for (ClientThread currPlayer: clientThreads) {
@@ -112,19 +114,48 @@ public class Server extends Thread
 			}
 		 }
 		 
-		 //Ask players for BET
-		 for (ClientThread currPlayer: clientThreads) {
-			 currPlayer.queueBroadcast("PROMPTBET");
+		 //Ask players for BET whenever anyone in game is below highest bet 
+		 //numberOfBets will be ZERO unless all players either have the same bet or are not in game 
+		 while (numberOfBets == 0) {
+		 	 for (ClientThread currPlayer: clientThreads) {
+				 currPlayer.queueBroadcast("PROMPTBET");
+			 }
+		 	 
+		 	 while (numberOfBets < players) {}
+		 	 
+			 for (ClientThread cth: clientThreads) {
+				 PlayerData pd = getPlayerData(cth.getID());
+				 
+				 System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
+				 
+				 if (pd.isInGame() == true && pd.getPreviousBet() != ClientThread.getHighestBet()) {
+					 numberOfBets = 0;
+				 }
+			 }
 		 }
 		 
 		 //Ask players if they want to change cards
 		 for (ClientThread currPlayer: clientThreads) {
 			 currPlayer.queueBroadcast("PROMPTCHANGE");
 		 }
-		 
+
 		 //Ask players for second BET
-		 for (ClientThread currPlayer: clientThreads) {
-			 currPlayer.queueBroadcast("PROMPTBET");
+		 while (numberOfBets == 0) {
+		 	 for (ClientThread currPlayer: clientThreads) {
+				 currPlayer.queueBroadcast("PROMPTBET");
+			 }
+		 	 
+		 	 while (numberOfBets < players) {}
+		 	 
+			 for (ClientThread cth: clientThreads) {
+				 PlayerData pd = getPlayerData(cth.getID());
+				 
+				 System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
+				 
+				 if (pd.isInGame() == true && pd.getPreviousBet() != ClientThread.getHighestBet()) {
+					 numberOfBets = 0;
+				 }
+			 }
 		 }
 		 
 		 //Assessing hands
@@ -343,5 +374,9 @@ public class Server extends Thread
 
 	public static void setPot(int pot) {
 		Server.pot = pot;
+	}
+	
+	public static void incNumberOfBets() {
+		numberOfBets++;
 	}
 }

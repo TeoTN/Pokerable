@@ -106,8 +106,8 @@ public class Messenger {
             else if (msg.startsWith("PROMPTBET")) {
             	performMethod("promptBet"); 
             }
-            else if (msg.startsWith("BET")) {
-            	msg = msg.replace("BET|", "");
+            else if (msg.startsWith("SETBET")) {
+            	msg = msg.replace("SETBET|", "");
             	performMethod("bet", msg);
             }
             else if (msg.startsWith("DISPLAYMONEY")) {
@@ -140,9 +140,13 @@ public class Messenger {
             else if (msg.startsWith("ERROR")) {
             	String arr[] = msg.split("\\|");
             	if (arr[1].equals("CHEAT")) {
-            		System.out.println("NO CHEATERS ALLOWED ON THIS SERVER. BYE!");
+            		System.err.println("NO CHEATERS ALLOWED ON THIS SERVER. BYE!");
+            		performMethod("finalize");
             	}
-            	performMethod("finalize");
+            	else if (arr[1].equals("BET")) {
+            		System.out.println(arr[2]);
+            		performMethod("promptBet");
+            	}
             }
 		}
 	}

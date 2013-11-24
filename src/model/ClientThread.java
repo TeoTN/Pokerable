@@ -22,6 +22,8 @@ public class ClientThread extends Thread {
 	static int allowedThread=0;
 	static Object lock = null;
 	static int highestBet = 0;
+	private int previousBet = 0;
+	private String myName;
     
     /**
      * Constructor for instantiation
@@ -109,10 +111,7 @@ public class ClientThread extends Thread {
         		newHand +="|"+arr[i];
         	msgr.broadcast(newHand);
     	}
-    	synchronized (lock) {
-    		allowedThread=(allowedThread+1)%(Server.clientThreads.size());
-    		lock.notifyAll();
-    	}
+    	moveLockToNextPlayer();
     	Server.changedHands++;
 	}
 	
@@ -129,23 +128,88 @@ public class ClientThread extends Thread {
 		PlayerData pd;
 		pd = Server.getPlayerData(id);
 		int currentBalance = pd.getBalance(); 
+		boolean isDone = false;
+		int bet = 0;
 		switch (params[0]) {
 			case "CHECK":
-
+				if (highestBet != 0) {
+					msgr.broadcast("ERROR|BET|Unable to check when previous bet is not zero pounds");
+				}
+				else {
+					System.out.println("Player "+myName+" is checking.");
+					isDone = true;
+				}
 				break;
 			case "BET":
+				bet = Integer.parseInt(params[1]);
+				if (currentBalance >= bet) { // && bet > highestBet?
+					highestBet = bet;
+					previousBet = bet;
+					currentBalance -= bet;
+					isDone = true;
+					System.out.println("Player "+myName+" is betting ("+bet+")");
+				}
+				else {
+					msgr.broadcast("ERROR|BET|You have insufficient funds for such a bet.");
+					System.out.println("Player "+myName+" couldn't bet.");
+				}
 				break;
 			case "RAISE":
+				bet = Integer.parseInt(params[1]);
+				if (currentBalance >= (highestBet - previousBet + bet)) {
+					highestBet += bet;
+					previousBet = highestBet + bet;
+					currentBalance -= (highestBet - previousBet + bet);
+					isDone = true;
+				}
+				else {
+					msgr.broadcast("ERROR|BET|You have insufficient funds to raise highest bet.");
+				}
 				break;
 			case "CALL":
+				if (currentBalance >= highestBet - previousBet) {
+					previousBet = highestBet;
+					currentBalance -= highestBet - previousBet;
+					isDone = true;
+				}
+				else {
+					msgr.broadcast("ERROR|BET|You have insufficient funds to match previous bet.");
+				}
 				break;
 			case "FOLD":
+				pd.setInGame(false);
+				isDone = true;
 				break;
 			case "ALLIN":
+				if (currentBalance > 0) {
+					highestBet = currentBalance;
+					previousBet = currentBalance;
+					currentBalance = 0;
+					isDone = true;
+				}
+				else {
+					msgr.broadcast("ERROR|BET|You have no money.");
+					pd.setInGame(false);
+					isDone=true;
+				}
 				break;
 		}
+		if (isDone == true) {
+			pd.setBalance(currentBalance);
+			moveLockToNextPlayer();
+			
+		}
+	}
+	
+	public void moveLockToNextPlayer() {
 		synchronized (lock) {
-    		allowedThread=(allowedThread+1)%(Server.clientThreads.size());
+			int newID = (allowedThread+1)%(getServer().players);
+			for (int i=0; i<getServer().players; i++) {
+				if (!Server.getPlayerData(newID).isInGame())
+					newID++;
+			}
+			
+    		allowedThread=newID;
     		lock.notifyAll();
     	}
 	}
@@ -154,6 +218,7 @@ public class ClientThread extends Thread {
 		if (name.equals("Player") || name.equals("Bot"))
 			name+=" "+String.valueOf(id);
 		Server.getPlayerData(id).setName(name);
+		myName = name;
 		System.out.println("Player #"+id+" is now: "+name);
 	}
 	

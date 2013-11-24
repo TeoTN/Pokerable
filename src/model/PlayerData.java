@@ -30,6 +30,10 @@ public class PlayerData implements Comparable<PlayerData> {
 	public void setBalance(int balance) {
 		this.balance = balance;
 	}
+	
+	public void addBalance(int balance) {
+		this.balance += balance;
+	}
 
 	public Hand getHand() {
 		return hand;

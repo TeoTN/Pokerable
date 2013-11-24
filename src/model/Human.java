@@ -61,7 +61,9 @@ public class Human extends Player {
 	 */
 	@Override
 	public void promptBet() {
-		msgr.broadcast("BET|");
+		System.out.println("RAW BET PROMPT: ");
+		String params = input.nextLine();
+		msgr.broadcast("SETBET|"+params);
 	}
 	@Override
 	public void promptName() {

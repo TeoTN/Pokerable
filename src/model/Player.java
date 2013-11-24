@@ -93,8 +93,8 @@ public abstract class Player extends Thread
 	
 	/**
 	 * Function MUST answer with message covering pattern:
-	 * 	BET|[typeofbet]|[money]
-	 * e.g.: msgr.broadcast("BET|CALL|0")
+	 * 	SETBET|[typeofbet]|[money]
+	 * e.g.: msgr.broadcast("SETBET|CALL|0")
 	 * otherwise a deadlock is going to occur
 	 * 
 	 * Available types of bet:

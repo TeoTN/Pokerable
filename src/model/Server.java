@@ -21,12 +21,9 @@ public class Server extends Thread
 	int players=0;
 	private static List<PlayerData> pData;
 	static List<ClientThread> clientThreads;
-	//private static List<Hand> hands;
-	//private static List<Integer> accounts;
 	static int changedHands=0;
-	//public static List<Integer> wins;
 	private static Server instance;
-	
+	private static int pot=0;
 	
 	private Server() throws Exception {
 		this(1700);
@@ -98,6 +95,7 @@ public class Server extends Thread
 		 
 		 //Reset variables
 		 changedHands = 0;
+		 setPot(0);
 		 
 		 //Give players their hands
 		 for (ClientThread currPlayer: clientThreads) {
@@ -122,6 +120,11 @@ public class Server extends Thread
 		 //Ask players if they want to change cards
 		 for (ClientThread currPlayer: clientThreads) {
 			 currPlayer.queueBroadcast("PROMPTCHANGE");
+		 }
+		 
+		 //Ask players for second BET
+		 for (ClientThread currPlayer: clientThreads) {
+			 currPlayer.queueBroadcast("PROMPTBET");
 		 }
 		 
 		 //Assessing hands
@@ -161,11 +164,17 @@ public class Server extends Thread
 			 else currPlayer.lost();
 		 }
 		 
-		 if (winnersID.size()==1)
-			 clientThreads.get(winnersID.get(0)).win();
+		 //Increase account balance of winners
+		 if (winnersID.size()==1) {
+			 int id = winnersID.get(0);
+			 clientThreads.get(id).win();
+			 getPlayerData(id).addBalance(pot);
+		 }
 		 else
-			 for (int id: winnersID)
+			 for (int id: winnersID) {
 				 clientThreads.get(id).tie();
+				 getPlayerData(id).addBalance(pot/(winnersID.size()));
+			 }
 	}
 
 	public void run() {
@@ -326,5 +335,13 @@ public class Server extends Thread
 
 	public static void setWinsSentOfId(int id) {
 		getPlayerData(id).setSentWins();
+	}
+
+	public static int getPot() {
+		return pot;
+	}
+
+	public static void setPot(int pot) {
+		Server.pot = pot;
 	}
 }

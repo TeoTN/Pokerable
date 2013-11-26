@@ -102,7 +102,7 @@ public abstract class Player extends Thread
 	 * 
 	 * Account balance is available in field accountBalance of type int
 	 */
-	abstract public void promptBet();
+	abstract public void promptBet(String params);
 
 	public Hand getHand() {
 		return hand;
@@ -154,10 +154,18 @@ public abstract class Player extends Thread
     	System.out.println("You've lost! Your score: "+ wins);
     }
     
+    public abstract void setMoneyAtBeginning();
+    
     public void displayMoney(String msg) {
     	int m = Integer.parseInt(msg);
     	accountBalance = m;
-    	System.out.println("Currently you have "+m+" pounds");
+    	if (m!=0) {
+    		System.out.println("Currently you have "+m+" pounds");
+    	}
+    	else {
+    		System.out.println("You are out of game due to lack of money.");
+    		finalize();
+    	}
     }
     
     public void broadcastWins() {

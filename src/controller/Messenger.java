@@ -102,7 +102,9 @@ public class Messenger {
             	performMethod("promptChange"); 
             }
             else if (msg.startsWith("PROMPTBET")) {
-            	performMethod("promptBet"); 
+            	msg = msg.replace("PROMPTBET|", "");
+            	performMethod("setMoneyAtBeginning");
+            	performMethod("promptBet", msg); 
             }
             else if (msg.startsWith("SETBET")) {
             	msg = msg.replace("SETBET|", "");

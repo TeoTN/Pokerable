@@ -21,7 +21,7 @@ public class ClientThread extends Thread {
 	private Deck deck;
 	static int allowedThread=0;
 	static Object lock = null;
-	static int highestBet = 0;
+	static int highestBet = 0, previousBet = 0, myPreviousBet = 0;
 	private String myName;
     
     /**
@@ -129,7 +129,6 @@ public class ClientThread extends Thread {
 		int currentBalance = pd.getBalance(); 
 		boolean isDone = false;
 		int bet = 0;
-		int previousBet = pd.getPreviousBet();
 		switch (params[0]) {
 			case "CHECK":
 				if (highestBet != 0) {
@@ -142,22 +141,28 @@ public class ClientThread extends Thread {
 				break;
 			case "BET":
 				bet = Integer.parseInt(params[1]);
-				if (currentBalance >= bet) { // && bet > highestBet?
+				if (currentBalance >= bet && highestBet == 0) {
 					highestBet = bet;
-					previousBet = bet;
+					myPreviousBet = previousBet = bet;
 					currentBalance -= bet;
+					Server.incPot(bet);
 					isDone = true;
 					System.out.println("Player "+myName+" is betting ("+bet+")");
 				}
-				else {
+				else if (currentBalance < bet) {
 					msgr.broadcast("ERROR|BET|You have insufficient funds for such a bet.");
 					System.out.println("Player "+myName+" couldn't bet.");
+				}
+				else {
+					msgr.broadcast("ERROR|BET|You may not bet when bet is already done.");
+					System.out.println("Player "+myName+" couldn't bet after betting");
 				}
 				break;
 			case "RAISE":
 				bet = Integer.parseInt(params[1]);
-				if (currentBalance >= (highestBet - previousBet + bet)) {
-					previousBet = highestBet + bet;
+				if (currentBalance >= (highestBet - myPreviousBet + bet)) {
+					Server.incPot(bet+highestBet - myPreviousBet);
+					myPreviousBet = previousBet = highestBet + bet;
 					highestBet += bet;
 					currentBalance -= (highestBet - previousBet + bet);
 					isDone = true;
@@ -168,8 +173,9 @@ public class ClientThread extends Thread {
 				}
 				break;
 			case "CALL":
-				if (currentBalance >= highestBet - previousBet) {
-					previousBet = highestBet;
+				if (currentBalance >= highestBet - myPreviousBet) {
+					Server.incPot(highestBet - myPreviousBet);
+					myPreviousBet = previousBet = highestBet;
 					currentBalance -= highestBet - previousBet;
 					isDone = true;
 					System.out.println("Player "+myName+" is calling");
@@ -186,7 +192,8 @@ public class ClientThread extends Thread {
 			case "ALLIN":
 				if (currentBalance > 0) {
 					highestBet = currentBalance;
-					previousBet = currentBalance;
+					Server.incPot(currentBalance);
+					myPreviousBet = previousBet = currentBalance;
 					currentBalance = 0;
 					isDone = true;
 					System.out.println("Player "+myName+" is all-in");
@@ -197,11 +204,14 @@ public class ClientThread extends Thread {
 					isDone=true;
 				}
 				break;
+			default:
+				msgr.broadcast("ERROR|BET|Incorrect command ("+params[0]+")");
+				break;
 		}
 		//TODO Broadcast all queueBroadcast("LASTBET|"+myName+"|"+previousBet);
 		if (isDone == true) {
 			pd.setBalance(currentBalance);
-			pd.setPreviousBet(previousBet);
+			pd.setPreviousBet(myPreviousBet);
 			Server.incNumberOfBets();
 			moveLockToNextPlayer();
 		}
@@ -314,5 +324,14 @@ public class ClientThread extends Thread {
 
 	public static int getHighestBet() {
 		return highestBet;
+	}
+	
+	public static void resetBet() {
+		previousBet = 0;
+		highestBet = 0;
+	}
+
+	public static void resetAllowedThread() {
+		allowedThread = 0;
 	}
 }/* END OF CLASS ClientThread */

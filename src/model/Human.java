@@ -55,12 +55,14 @@ public class Human extends Player {
     	}
 	}
 	
+	public void setMoneyAtBeginning() {}
+	
 	/**
 	 * Documentation and usage available in Player class
 	 * @see Player
 	 */
 	@Override
-	public void promptBet() {
+	public void promptBet(String data) {
 		System.out.println("RAW BET PROMPT: ");
 		String params = input.nextLine();
 		msgr.broadcast("SETBET|"+params);

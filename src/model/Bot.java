@@ -5,11 +5,10 @@ public class Bot extends Player
 {
 	private HandRankBot hrb;
 	private List<Card> toChange;
-	private boolean cheating;
+	private int moneyAtBeginning = 0;
 
 	Bot(String host, int port) {
 		super(host, port);
-		cheating = false;
 	}
 	
 	public void run() {
@@ -47,23 +46,28 @@ public class Bot extends Player
 	 * Documentation and usage available in Player class
 	 * @see Player
 	 * @param String
-	 *		Nr licytacji | Poczï¿½tkowy stan konta (z poczï¿½tku rundy) | Aktualna stawka
+	 *		Nr licytacji | Pocz¹tkowy stan konta (z pocz¹tku rundy) | Aktualna stawka
 	 */
 	@Override
-	public void promptBet() 
+	public void promptBet(String data) 
 	{
-		String out = BotStrategy.strategy1(accountBalance, 0, 0, 0, cheating, hrb);
-		
-		if(out.charAt(out.length()-1) == 'F'){
-			cheating = true;
-			out = out.substring(0, out.length()-1);
-		}
-		
-		msgr.broadcast("BET|" + out);
+		String[] arr = data.split("\\|");
+		int a = Integer.parseInt(arr[0]);
+		int b = Integer.parseInt(arr[1]);
+		String out = BotStrategy.strategy1(accountBalance, a, getMoneyAtBeginning(), b, false, hrb);
+		msgr.broadcast("SETBET|" + out);
 	}
 
 	@Override
 	public String promptName() {
 		return "Bot";
+	}
+
+	public int getMoneyAtBeginning() {
+		return moneyAtBeginning;
+	}
+
+	public void setMoneyAtBeginning() {
+		this.moneyAtBeginning = account;
 	}
 }

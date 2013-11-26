@@ -96,7 +96,7 @@ public class Server extends Thread
 		 
 		 //Reset variables
 		 changedHands = 0;
-		 setPot(0);
+		 pot = 0;
 		 numberOfBets = 0;
 		 
 		 //Give players their hands
@@ -115,31 +115,7 @@ public class Server extends Thread
 		 }
 		 
 		 //Ask players for BET whenever anyone in game is below highest bet 
-		 //numberOfBets will be ZERO unless all players either have the same bet or are not in game 
-		 while (numberOfBets == 0) {
-		 	 for (ClientThread currPlayer: clientThreads) {
-				 currPlayer.queueBroadcast("PROMPTBET");
-			 }
-		 	 
-		 	 while (numberOfBets < players) {
-		 		 //System.err.print(numberOfBets);
-		 		 try {
-					sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-		 	 }
-		 	 
-			 for (ClientThread cth: clientThreads) {
-				 PlayerData pd = getPlayerData(cth.getID());
-				 
-				 //System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
-				 
-				 if (pd.isInGame() == true && pd.getPreviousBet() != ClientThread.getHighestBet()) {
-					 numberOfBets = 0;
-				 }
-			 }
-		 }
+		 bet(1);
 		 
 		 //Ask players if they want to change cards
 		 for (ClientThread currPlayer: clientThreads) {
@@ -147,30 +123,7 @@ public class Server extends Thread
 		 }
 
 		 //Ask players for second bet
-		 while (numberOfBets == 0) {
-		 	 for (ClientThread currPlayer: clientThreads) {
-				 currPlayer.queueBroadcast("PROMPTBET");
-			 }
-		 	 
-		 	 while (numberOfBets < players) {
-		 		 //System.err.print(numberOfBets);
-		 		 try {
-					sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-		 	 }
-		 	 
-			 for (ClientThread cth: clientThreads) {
-				 PlayerData pd = getPlayerData(cth.getID());
-				 
-				 //System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
-				 
-				 if (pd.isInGame() == true && pd.getPreviousBet() != ClientThread.getHighestBet()) {
-					 numberOfBets = 0;
-				 }
-			 }
-		 }
+		 bet(2);
 		 
 		 //Assessing hands
 		 for (PlayerData pd: pData) {
@@ -209,17 +162,66 @@ public class Server extends Thread
 			 else currPlayer.lost();
 		 }
 		 
-		 //Increase account balance of winners
+		 //Increase account balance of winners, acclaim winners
 		 if (winnersID.size()==1) {
 			 int id = winnersID.get(0);
 			 clientThreads.get(id).win();
 			 getPlayerData(id).addBalance(pot);
 		 }
-		 else
+		 else {
 			 for (int id: winnersID) {
 				 clientThreads.get(id).tie();
 				 getPlayerData(id).addBalance(pot/(winnersID.size()));
 			 }
+		 }
+		 //Exclude from game people with no money
+		 for (PlayerData pd: pData) {
+			 if (pd.getBalance() == 0) {
+				 pd.setInGame(false);
+			 }
+		 }
+	}
+
+	private void bet(int i) {
+		//numberOfBets will be ZERO unless all players either have the same bet or are not in game 
+		numberOfBets = 0;
+		 while (numberOfBets == 0) {
+		 	 for (ClientThread currPlayer: clientThreads) {
+		 		 PlayerData pd = getPlayerData(currPlayer.getID());
+		 		 if (pd.getPreviousBet() < ClientThread.getHighestBet() || pd.getPreviousBet() == 0) {
+		 			 currPlayer.queueBroadcast("PROMPTBET|"+i+"|"+ClientThread.getHighestBet());
+		 		 }
+		 		 else numberOfBets++;
+			 }
+		 	 
+		 	 while (numberOfBets < players) {
+		 		System.err.print(".");
+		 		 try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		 	 }
+			 for (ClientThread cth: clientThreads) {
+				 PlayerData pd = getPlayerData(cth.getID());
+				 
+				 //System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
+				 
+				 if (pd.isInGame() == true && pd.getPreviousBet() < ClientThread.getHighestBet()) {
+					 numberOfBets = 0;
+				 }
+			 }
+		 }
+		 ClientThread.resetBet();
+		 resetBet();
+		 ClientThread.resetAllowedThread();
+		 return;
+	}
+
+	private void resetBet() {
+		for (PlayerData pd: pData) {
+			pd.setPreviousBet(0);
+		}
 	}
 
 	public void run() {
@@ -386,8 +388,8 @@ public class Server extends Thread
 		return pot;
 	}
 
-	public static void setPot(int pot) {
-		Server.pot = pot;
+	public static void incPot(int pot) {
+		Server.pot += pot;
 	}
 	
 	public static void incNumberOfBets() {

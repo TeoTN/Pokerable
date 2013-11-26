@@ -2,7 +2,11 @@
 =========
 v 1.0
 
+<<<<<<< HEAD
 Program contains both client and server class. Server is like "poker table" with both deck, players' cards and so on.  
+=======
+Program contains both client and server class. Server is like "poker table" with both deck, players' cards and so on. 
+>>>>>>> origin/master
 You set up server like this: java Main.java server 2267 (Where last parameter is port number)  
 You set up client like this: java Main.java client 127.0.0.1 2267 (Where last parameter is port number and previous one is server IP)  
 

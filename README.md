@@ -1,6 +1,6 @@
 ﻿Pokerable
 =========
-v 1.0
+v 2.5
 
 You set up server like this: java Main.java server 2267 (Where last parameter is port number)  
 You set up client like this: java Main.java client 127.0.0.1 2267 (Where last parameter is port number and previous one is server IP)  

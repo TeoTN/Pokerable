@@ -171,6 +171,6 @@ public final class BotStrategy
 			return ("RAISE|" + raiseValue);
 		}
 		
-		return "";
+		return "ERROR";
 	}
 }

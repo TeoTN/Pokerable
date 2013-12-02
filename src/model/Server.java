@@ -182,7 +182,8 @@ public class Server extends Thread
 		 }
 	}
 
-	private void bet(int i) {
+	private void bet(int i)
+	{
 		//numberOfBets will be ZERO unless all players either have the same bet or are not in game 
 		numberOfBets = 0;
 		 while (numberOfBets == 0) {

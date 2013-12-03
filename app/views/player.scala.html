@@ -1,4 +1,4 @@
-@(message: String)
+@(typeStr: String)
 
 <!DOCTYPE html>
 <html>
@@ -6,11 +6,13 @@
 	<title>Pokerable</title>
 </head>
 <body>
-	<h1>Successfully created and started player of type @message</h1>
-	<form>
-		<label for="playerName">Enter your name:</label>
-		<input type="text" name="playerName" id="playerName" placeholder="e.g. John">
-		<input type="submit" value="OK">
-	</form>
+	<h1>Successfully created and started player of type @typeStr</h1>
+		@if(typeStr=="human") {
+			<form>
+				<label for="playerName">Enter your name:</label>
+				<input type="text" name="playerName" id="playerName" placeholder="e.g. John">
+				<input type="submit" value="OK">
+			</form>
+		}
 </body>
 </html>

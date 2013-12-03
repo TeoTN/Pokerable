@@ -7,7 +7,7 @@ public class Bot extends Player
 	private List<Card> toChange;
 	private int moneyAtBeginning = 0;
 
-	Bot(String host, int port) {
+	public Bot(String host, int port) {
 		super(host, port);
 	}
 	

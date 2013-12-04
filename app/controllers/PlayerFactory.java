@@ -12,6 +12,7 @@ import models.*;
 public class PlayerFactory extends Controller {
 	public static Result newInstance(String type) {
 		type = type.toLowerCase();
+		Player.setGUIMode(true);
 		Player instance = null;
 		if (type.equals("human")) {
 			instance = new Human("localhost", 1700);

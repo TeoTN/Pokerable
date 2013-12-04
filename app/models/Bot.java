@@ -11,7 +11,7 @@ public class Bot extends Player
 		super(host, port);
 	}
 	
-	public void run() {
+	public void run() { 
 		connect();
 	}
 

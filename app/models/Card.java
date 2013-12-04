@@ -4,6 +4,8 @@ public class Card implements Comparable<Card>
 	private char color; // H - hearts, D - diamonds, S - spades, C - clubs
 	private char card;  // 2, 3, 4, 5, 6, 7, 8, 9, T, J, Q, K, A
 	
+	public static Character[] CardList = {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
+	
 	/**
 	 * Empty constructor
 	 */
@@ -48,9 +50,8 @@ public class Card implements Comparable<Card>
 	 */
 	public int getCardValue()
 	{
-		Character[] arr = {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
 		for (int i = 0 ; i < 13 ; i ++) {
-			if (card == arr[i])
+			if (card == CardList[i])
 				return i;
 		}
 		return -1;

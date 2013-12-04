@@ -4,7 +4,7 @@ import java.util.*;
 /**
  * Class holding deck of cards.
  * Following implementation was made with usage of Singleton Pattern.
- * @author Piotr Stani�w
+ * @author Piotr Staniów, Michał Kiełbowicz
  */
 public class Deck
 {
@@ -13,8 +13,6 @@ public class Deck
 	 */
 	private static Deck instance;
 	private List<Card> cards;
-	private Character[] CardList = {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
-	
 	
 	/**
 	 * Constructor of class Deck. Loads ArrayList cards.
@@ -37,7 +35,7 @@ public class Deck
 			for(int j = 0 ; j < 13 ; j ++)
 			{
 				try{
-					Card tmp = new Card(currentColor,CardList[j]);
+					Card tmp = new Card(currentColor,Card.CardList[j]);
 					cards.add(tmp);
 				}
 				catch(Exception ex){
@@ -50,7 +48,7 @@ public class Deck
 			Collections.shuffle(cards);
 		}
 		
-		for(int i = 0 ; i < 10 ; i ++){
+		for(int i = 0 ; i < 100 ; i ++){
 			Collections.shuffle(cards);
 		}
 	}
@@ -79,8 +77,29 @@ public class Deck
 		}
 		
 		return c;
+	}	
+	
+	/**
+	 * Pulls a card from the top of deck
+	 * @return top card (String format)
+	 */
+	public String pullCardToString()
+	{
+		String ss = "";
+		try {
+			ss = pullCard().toString();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ss;
 	}
 	
+	/**
+	 * Push a card into top of deck
+	 * @param s card String
+	 * @throws Exception
+	 */
 	public void pushCard(String s) throws Exception
 	{
 		Card c = null;
@@ -90,23 +109,12 @@ public class Deck
 			e.printStackTrace();
 		}
 		
-		if(cards.size() < 52){
+		if(cards.size() < 52) {
 			cards.add(c);
 		}
-		else{
+		else {
 			throw new Exception("Too many cards");
 		}
-	}
-	
-	public String pullCardToString() {
-		String ss = "";
-		try {
-			ss = pullCard().toString();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ss;
 	}
 	
 	/**

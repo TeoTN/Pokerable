@@ -1,7 +1,8 @@
 package models;
 import java.util.*;
 
-public class Hand implements Comparable<Hand> {
+public class Hand implements Comparable<Hand>
+{
 	private List<Card> cards;
 	private HandRank handRank;
 	
@@ -15,6 +16,10 @@ public class Hand implements Comparable<Hand> {
 		cards = new ArrayList<Card>(5);
 		String[] arr = s.split("\\|");
 		Card addedCard = null;
+		
+		if(arr.length > 5){
+			throw new Exception("Too many Cards");
+		}
 		
 		for (String cardString: arr)
 		{
@@ -50,6 +55,11 @@ public class Hand implements Comparable<Hand> {
 		return out.substring(0, out.length()-1);
 	}
 	
+	/**
+	 * Checks if Card is in hand
+	 * @param s Card passed by string
+	 * @return true if card is in hand else false
+	 */
 	public boolean includes(String s)
 	{
 		Card c = null;
@@ -71,12 +81,18 @@ public class Hand implements Comparable<Hand> {
 	public void sort() {
 		Collections.sort(cards);
 	}
-
+	
+	/**
+	 * Invoke compareTo from handRank class
+	 */
 	@Override
 	public int compareTo(Hand o) {
 		return handRank.compareTo(o.getHandRank());
 	}
-
+	
+	/**
+	 * @return this Hand's handRank field
+	 */
 	public HandRank getHandRank() {
 		return handRank;
 	}

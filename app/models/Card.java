@@ -1,5 +1,6 @@
 package models;
-public class Card implements Comparable<Card> {
+public class Card implements Comparable<Card>
+{
 	private char color; // H - hearts, D - diamonds, S - spades, C - clubs
 	private char card;  // 2, 3, 4, 5, 6, 7, 8, 9, T, J, Q, K, A
 	
@@ -88,6 +89,7 @@ public class Card implements Comparable<Card> {
 	
 	/**
 	 * Comparison between cards' values. WE DON'T NEED COLOR!!
+	 * @return positive value if 'this' is greater
 	 */
 	@Override
 	public int compareTo(Card c)

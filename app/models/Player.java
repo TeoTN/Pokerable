@@ -22,8 +22,8 @@ public abstract class Player extends Thread
 	PrintWriter out = null;
 	BufferedReader in = null;
 	String msg = "";
-	Scanner input;
 	String host;
+	private static boolean isGUIModeOn = false;
 	
 	Player() {
 		this("localhost", 1700);
@@ -32,7 +32,6 @@ public abstract class Player extends Thread
 	Player(String host, int port) {
 		this.port = port;
 		this.host = host;
-		input = new Scanner(System.in);
 	}
 	
 	
@@ -50,11 +49,11 @@ public abstract class Player extends Thread
 	        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	    }
 	    catch (UnknownHostException e) {
-	    	System.out.println("Unable to reach host: localhost");
+	    	Printer.print("Unable to reach host: localhost");
 	    	System.exit(-1);
 	    }
 	    catch (IOException e) {
-	    	System.out.println("Connection refused.");
+	    	Printer.print("Connection refused.");
 	    	System.exit(-1);
 	    }
 	    catch (Exception e) {
@@ -126,10 +125,10 @@ public abstract class Player extends Thread
 			hand = new Hand(s);
 		}
 		catch (Exception ex) {
-			System.err.println("Unable to create hand.");
+			Printer.print("Unable to create hand.");
 			ex.printStackTrace();
 		}
-    	System.out.println("Your current hand is: "+getHandToString());
+		Printer.print("Your current hand is: "+getHandToString());
     	msgr.broadcast("HAND|"+getHandToString());
 	}
 	
@@ -143,15 +142,15 @@ public abstract class Player extends Thread
     }
     
     public void win() {
-    	System.out.println("You won! Score: "+ (++wins));
+    	Printer.print("You won! Score: "+ (++wins));
     }
     
     public void tie() {
-    	System.out.println("There was a tie! Your score: "+ (++wins));
+    	Printer.print("There was a tie! Your score: "+ (++wins));
     }
     
     public void lost() {
-    	System.out.println("You've lost! Your score: "+ wins);
+    	Printer.print("You've lost! Your score: "+ wins);
     }
     
     public abstract void setMoneyAtBeginning();
@@ -160,10 +159,10 @@ public abstract class Player extends Thread
     	int m = Integer.parseInt(msg);
     	accountBalance = m;
     	if (m!=0) {
-    		System.out.println("Currently you have "+m+" pounds");
+    		Printer.print("Currently you have "+m+" pounds");
     	}
     	else {
-    		System.out.println("You are out of game due to lack of money.");
+    		Printer.print("You are out of game due to lack of money.");
     		finalize();
     	}
     }
@@ -171,4 +170,12 @@ public abstract class Player extends Thread
     public void broadcastWins() {
     	msgr.broadcast("WINS|"+wins);
     }
+
+	public static boolean isGUIModeOn() {
+		return isGUIModeOn;
+	}
+
+	public static void setGUIMode(boolean isGUIModeOn) {
+		Player.isGUIModeOn = isGUIModeOn;
+	}
 }

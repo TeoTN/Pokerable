@@ -132,7 +132,7 @@ public class Messenger {
             else if (msg.startsWith("RESULT")) {
             	String arr[] = msg.split("\\|");
             	System.out.println("\nRESULTS:");
-            	for (int i=1; i<arr.length; i++) {
+            	for (int i=1; i<arr.length; i+=2) {
             		System.out.println("Player "+arr[i]+" has scored: "+arr[i+1]);
             	}
             }

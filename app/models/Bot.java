@@ -30,14 +30,14 @@ public class Bot extends Player
 		}
 		
 		toChange = hrb.getChangeList(getHandToString());
-		System.out.println("I will change "+toChange.size() + " cards.");
+		Printer.print("I will change "+toChange.size() + " cards.");
 		String msg = getHandToString();
 		if (toChange.size()>=0 && toChange.size() <=4){
 			for (Card c: toChange) {
 				msg+="|"+c.toString();
 			}
 			if (toChange.size()>0)
-				System.out.println(msg.substring(15, msg.length()));
+				Printer.print(msg.substring(15, msg.length()));
 		}
 		msgr.broadcast("CHANGE|"+msg); 
 	}
@@ -46,7 +46,7 @@ public class Bot extends Player
 	 * Documentation and usage available in Player class
 	 * @see Player
 	 * @param String
-	 *		Nr licytacji | Pocz�tkowy stan konta (z pocz�tku rundy) | Aktualna stawka
+	 *		Nr licytacji | Początkowy stan konta (z początku rundy) | Aktualna stawka
 	 */
 	@Override
 	public void promptBet(String data) 

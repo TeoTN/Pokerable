@@ -214,8 +214,8 @@ public abstract class Player extends Thread
 	}
 	
 	public void dispatchGUI(String msg) {
-		System.out.println("DBG: "+msg);
-		printer.print(msg);
+		if (msg!=null)
+			printer.print(msg);
 	}
 	
 	public WebSocket.Out<String> getWSout() {

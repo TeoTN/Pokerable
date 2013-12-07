@@ -13,7 +13,7 @@ public class Messenger {
 	private Object listener;
 	private String msg;
 	private String className;
-	private boolean GUImode;
+	private boolean GUImode = false;
 	
 	public Messenger(Object arg) {
 		listener = arg;
@@ -64,11 +64,10 @@ public class Messenger {
 				break;
 			}
 			
-			if (GUImode) {
+			if (GUImode && !className.contains("ClientThread")) {
 				dispatchGUI(msg);
 				return;
 			}
-			
 			if (!msg.equals("")) System.out.println("  { DEBUG: "+msg+" in: "+className+"}"); // DEBUG
 			if ("END".equals(msg)) {
 				Class cl = listener.getClass();
@@ -157,6 +156,7 @@ public class Messenger {
             	msg = msg.replace("SETBET|", "");
             	performMethod("bet", msg);
             }
+            else System.err.println(msg);
 		}
 	}
 	
@@ -170,23 +170,22 @@ public class Messenger {
 				performMethod("finalize");
 				break;
 			}
-			
 			if (msg.startsWith("SETHAND")) {
+				performMethod("dispatchGUI", msg);
 	        	msg = msg.replace("SETHAND|", "");
-	        	//performMethod("setHand", msg);
-	        	performMethod("dispatchGUI", msg);
+	        	performMethod("setHand", msg);
 	        }
 	        else if (msg.startsWith("PROMPTCHANGE")) {
 	        	performMethod("dispatchGUI", msg); 
 	        }
 	        else if (msg.startsWith("PROMPTBET")) {
+	        	performMethod("dispatchGUI", msg); 
 	        	msg = msg.replace("PROMPTBET|", "");
 	        	performMethod("setMoneyAtBeginning");
-	        	performMethod("dispatchGUI", msg); 
 	        }
 	        else if (msg.startsWith("DISPLAYMONEY")) {
-	        	msg = msg.replace("DISPLAYMONEY|", "");
 	        	performMethod("dispatchGUI", msg); 
+	        	msg = msg.replace("DISPLAYMONEY|", "");
 	        }
 	        else if (msg.startsWith("WIN")) {
 	        	performMethod("win");
@@ -207,9 +206,9 @@ public class Messenger {
 	        	performMethod("dispatchGUI", msg);
 	        }
 	        else if (msg.startsWith("ERROR")) {
+	        	performMethod("dispatchGUI", msg);
 	        	String arr[] = msg.split("\\|");
 	        	if (arr[1].equals("CHEAT")) {
-	        		performMethod("dispatchGUI", msg);
 	        		performMethod("finalize");
 	        	}
 	        	else if (arr[1].equals("BET")) {
@@ -217,6 +216,7 @@ public class Messenger {
 	        		performMethod("promptBet", "");
 	        	}
 	        }
+	        else System.err.println("Incorrect: "+msg);
 		}
 	}
 	

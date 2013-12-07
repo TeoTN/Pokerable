@@ -127,7 +127,7 @@ public class Server extends Thread
 			//Ask players if they want to change cards
 			for (ClientThread currPlayer: clientThreads) {
 				
-				if(getPlayerData(currPlayer.id).getIsBetting()){
+				if(getPlayerData(currPlayer.id).isInGame()){
 					currPlayer.queueBroadcast("PROMPTCHANGE");
 				}
 			}

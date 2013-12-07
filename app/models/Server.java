@@ -196,14 +196,17 @@ public class Server extends Thread
 		 		 else numberOfBets++;
 			 }
 		 	 
+		 	 System.out.print("Waiting for bets");
 		 	 while (numberOfBets < players) {
-		 		System.err.print(".");
+		 		System.out.print(".");
 		 		 try {
 					sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 		 	 }
+		 	 System.out.println(" ");
+		 	 
 			 for (ClientThread cth: clientThreads) {
 				 PlayerData pd = getPlayerData(cth.getID());
 				 

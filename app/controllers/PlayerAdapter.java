@@ -32,14 +32,16 @@ public class PlayerAdapter extends Controller {
 		}
 		players.add(lastID++, instance);
 		instance.start();
-		return ok(player.render(type, lastID-1));
+		return ok(player.render(type, instance.id));
 		//return ok(player.render(type, instance));
 	}
 	
 	public static Result connected(Integer id) {
+		Player instance = players.get(id);
 		final Map<String, String[]> values = request().body().asFormUrlEncoded();
 		String name = values.get("playerName")[0];
-		players.get(id).sendPlayerName(name);
+		instance.sendPlayerName(name);
+		instance.setGUIconnected();
 		return ok(gameplay.render());
 	}
 	

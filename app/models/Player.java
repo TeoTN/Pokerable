@@ -12,7 +12,7 @@ import controllers.Messenger;
  */
 public abstract class Player extends Thread
 {
-	long id;
+	public int id;
 	protected Messenger msgr;
 	protected int accountBalance;
 	int wins;		//number of won games
@@ -26,6 +26,7 @@ public abstract class Player extends Thread
 	String host;
 	private static boolean isGUIModeOn = false;
 	private boolean GUIconnected = false;
+	public static int lastID = 0;
 	
 	Player() {
 		this("localhost", 1700);
@@ -34,6 +35,7 @@ public abstract class Player extends Thread
 	Player(String host, int port) {
 		this.port = port;
 		this.host = host;
+		id = lastID++;
 	}
 	
 	
@@ -194,5 +196,9 @@ public abstract class Player extends Thread
 	
 	public void sendPlayerName(String name) {
 		msgr.broadcast("CONNECTED|"+name);
+	}
+	
+	public void setGUIconnected() {
+		GUIconnected = true;
 	}
 }

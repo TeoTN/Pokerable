@@ -42,7 +42,7 @@ public class PlayerManager extends Controller {
 		String name = values.get("playerName")[0];
 		instance.sendPlayerName(name);
 		instance.setGUIconnected();
-		return ok(gameplay.render());
+		return ok(gameplay.render(id));
 	}
 	
 	/*public static Result gameplay() {

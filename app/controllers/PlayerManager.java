@@ -45,7 +45,8 @@ public class PlayerManager extends Controller {
 		return ok(gameplay.render(id));
 	}
 	
-	/*public static Result gameplay() {
-		return ok(gameplay.render());
-	}*/
+	public static void broadcastWith(int id, String msg) {
+		Player instance = players.get(id);
+		instance.broadcastRemotely(msg);
+	}
 }

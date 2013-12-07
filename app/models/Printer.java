@@ -12,12 +12,7 @@ public class Printer {
 	
 	public static String prompt(String str) {
 		String out = "";
-		if (Player.isGUIModeOn()) {
-			
-		}
-		else {
-			out = ConsolePrinter.prompt(str);
-		}
+		out = ConsolePrinter.prompt(str);
 		return out;
 	}
 }

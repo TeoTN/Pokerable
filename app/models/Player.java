@@ -199,4 +199,8 @@ public abstract class Player extends Thread
 	public void setGUIconnected() {
 		GUIconnected = true;
 	}
+	
+	public void broadcastRemotely(String msg) {
+		msgr.broadcast(msg);
+	}
 }

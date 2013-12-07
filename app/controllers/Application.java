@@ -29,7 +29,7 @@ public class Application extends Controller {
             	in.onMessage(new Callback<JsonNode>() {
                     public void invoke(JsonNode event) {
                         String eventStr = event.get("text").asText();
-                        System.out.println("DBG: ("+String.valueOf(id)+") "+eventStr);
+                        PlayerManager.broadcastWith(id, eventStr);
                     } 
                  });
                  

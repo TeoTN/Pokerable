@@ -3,6 +3,8 @@ import java.net.*;
 import java.util.Scanner;
 import java.io.*;
 
+import play.mvc.WebSocket;
+import play.mvc.WebSocket.Out;
 import controllers.Messenger;
 
 /**
@@ -26,7 +28,9 @@ public abstract class Player extends Thread
 	private static boolean isGUIModeOn = false;
 	private boolean GUIconnected = false;
 	public static int lastID = 0;
-	
+	private WebSocket.In<String> WSin;
+	private WebSocket.Out<String> WSout;
+	private Printer printer;
 	Player() {
 		this("localhost", 1700);
 	}
@@ -34,6 +38,7 @@ public abstract class Player extends Thread
 	Player(String host, int port) {
 		this.port = port;
 		this.host = host;
+		printer = new Printer(this);
 	}
 	
 	
@@ -51,11 +56,11 @@ public abstract class Player extends Thread
 	        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	    }
 	    catch (UnknownHostException e) {
-	    	Printer.print("Unable to reach host: localhost");
+	    	printer.print("Unable to reach host: localhost");
 	    	System.exit(-1);
 	    }
 	    catch (IOException e) {
-	    	Printer.print("Connection refused.");
+	    	printer.print("Connection refused.");
 	    	System.exit(-1);
 	    }
 	    catch (Exception e) {
@@ -138,10 +143,10 @@ public abstract class Player extends Thread
 			hand = new Hand(s);
 		}
 		catch (Exception ex) {
-			Printer.print("Unable to create hand.");
+			printer.print("Unable to create hand.");
 			ex.printStackTrace();
 		}
-		Printer.print("Your current hand is: "+getHandToString());
+		printer.print("Your current hand is: "+getHandToString());
     	msgr.broadcast("HAND|"+getHandToString());
 	}
 	
@@ -155,15 +160,15 @@ public abstract class Player extends Thread
     }
     
     public void win() {
-    	Printer.print("You won! Score: "+ (++wins));
+    	printer.print("You won! Score: "+ (++wins));
     }
     
     public void tie() {
-    	Printer.print("There was a tie! Your score: "+ (++wins));
+    	printer.print("There was a tie! Your score: "+ (++wins));
     }
     
     public void lost() {
-    	Printer.print("You've lost! Your score: "+ wins);
+    	printer.print("You've lost! Your score: "+ wins);
     }
     
     public abstract void setMoneyAtBeginning();
@@ -172,10 +177,10 @@ public abstract class Player extends Thread
     	int m = Integer.parseInt(msg);
     	accountBalance = m;
     	if (m!=0) {
-    		Printer.print("Currently you have "+m+" pounds");
+    		printer.print("Currently you have "+m+" pounds");
     	}
     	else {
-    		Printer.print("You are out of game due to lack of money.");
+    		printer.print("You are out of game due to lack of money.");
     		finalize();
     	}
     }
@@ -202,5 +207,23 @@ public abstract class Player extends Thread
 	
 	public void broadcastRemotely(String msg) {
 		msgr.broadcast(msg);
+	}
+	
+	public void bindWS(WebSocket.In<String> in, WebSocket.Out<String> out) {
+		WSin = in;
+		WSout = out;
+	}
+	
+	public Printer getPrinter() {
+		return printer;
+	}
+	
+	public void dispatchGUI(String msg) {
+		System.out.println("DBG: "+msg);
+		printer.print(msg);
+	}
+	
+	public WebSocket.Out<String> getWSout() {
+		return WSout;
 	}
 }

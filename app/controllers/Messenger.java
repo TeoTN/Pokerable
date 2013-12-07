@@ -22,9 +22,7 @@ public class Messenger {
 		Method getInput = null;
 		Method getOutput = null;
 		className = listener.getClass().getName();
-		if (className.equals("Player") && isGUIModeOn()) {
-			GUImode = true;
-		}
+		GUImode = Player.isGUIModeOn();
 		//Initialize input/output
 		try {
 			listenerAdapter = Class.forName(className);
@@ -71,7 +69,7 @@ public class Messenger {
 				return;
 			}
 			
-			if (!msg.equals("")) System.out.println("  { DEBUG: "+msg+" from: "+className+"}"); // DEBUG
+			if (!msg.equals("")) System.out.println("  { DEBUG: "+msg+" in: "+className+"}"); // DEBUG
 			if ("END".equals(msg)) {
 				Class cl = listener.getClass();
 				String nameOfClass = cl.getName();
@@ -163,56 +161,63 @@ public class Messenger {
 	}
 	
 	private void dispatchGUI(String msg) {
-		if (msg.startsWith("SETHAND")) {
-        	msg = msg.replace("SETHAND|", "");
-        	performMethod("setHand", msg);
-        }
-        else if (msg.startsWith("PROMPTCHANGE")) {
-        	//performMethod("promptChange"); 
-        }
-        else if (msg.startsWith("PROMPTBET")) {
-        	msg = msg.replace("PROMPTBET|", "");
-        	performMethod("setMoneyAtBeginning");
-        	//performMethod("promptBet", msg); 
-        }
-        else if (msg.startsWith("DISPLAYMONEY")) {
-        	msg = msg.replace("DISPLAYMONEY|", "");
-        	//performMethod("displayMoney", msg); 
-        }
-        else if (msg.startsWith("WIN")) {
-        	performMethod("win");
-        }
-        else if (msg.startsWith("TIE")) {
-        	performMethod("tie");
-        }
-        else if (msg.startsWith("LOST")) {
-        	performMethod("lost");
-        }
-        else if (msg.startsWith("ROUND")) {
-        	String arr[] = msg.split("\\|");
-        	System.out.println("\nRound: "+arr[1]);
-        }
-        else if (msg.startsWith("GETWINS")) {
-        	performMethod("broadcastWins");
-        }
-        else if (msg.startsWith("RESULT")) {
-        	String arr[] = msg.split("\\|");
-        	System.out.println("\nRESULTS:");
-        	for (int i=1; i<arr.length; i+=2) {
-        		System.out.println("Player "+arr[i]+" has scored: "+arr[i+1]);
-        	}
-        }
-        else if (msg.startsWith("ERROR")) {
-        	String arr[] = msg.split("\\|");
-        	if (arr[1].equals("CHEAT")) {
-        		System.err.println("NO CHEATERS ALLOWED ON THIS SERVER. BYE!");
-        		performMethod("finalize");
-        	}
-        	else if (arr[1].equals("BET")) {
-        		System.out.println(arr[2]);
-        		performMethod("promptBet", "");
-        	}
-        }
+		while(msg != null) {
+			try {
+				msg = in.readLine();
+			}
+			catch (IOException e) {
+				//e.printStackTrace();
+				performMethod("finalize");
+				break;
+			}
+			
+			if (msg.startsWith("SETHAND")) {
+	        	msg = msg.replace("SETHAND|", "");
+	        	//performMethod("setHand", msg);
+	        	performMethod("dispatchGUI", msg);
+	        }
+	        else if (msg.startsWith("PROMPTCHANGE")) {
+	        	performMethod("dispatchGUI", msg); 
+	        }
+	        else if (msg.startsWith("PROMPTBET")) {
+	        	msg = msg.replace("PROMPTBET|", "");
+	        	performMethod("setMoneyAtBeginning");
+	        	performMethod("dispatchGUI", msg); 
+	        }
+	        else if (msg.startsWith("DISPLAYMONEY")) {
+	        	msg = msg.replace("DISPLAYMONEY|", "");
+	        	performMethod("dispatchGUI", msg); 
+	        }
+	        else if (msg.startsWith("WIN")) {
+	        	performMethod("win");
+	        }
+	        else if (msg.startsWith("TIE")) {
+	        	performMethod("tie");
+	        }
+	        else if (msg.startsWith("LOST")) {
+	        	performMethod("lost");
+	        }
+	        else if (msg.startsWith("ROUND")) {
+	        	performMethod("dispatchGUI", msg);
+	        }
+	        else if (msg.startsWith("GETWINS")) {
+	        	performMethod("broadcastWins");
+	        }
+	        else if (msg.startsWith("RESULT")) {
+	        	performMethod("dispatchGUI", msg);
+	        }
+	        else if (msg.startsWith("ERROR")) {
+	        	String arr[] = msg.split("\\|");
+	        	if (arr[1].equals("CHEAT")) {
+	        		performMethod("dispatchGUI", msg);
+	        		performMethod("finalize");
+	        	}
+	        	else if (arr[1].equals("BET")) {
+	        		performMethod("dispatchGUI", msg);
+	        		performMethod("promptBet", "");
+	        	}
+	        }
+		}
 	}
 	
 	/**
@@ -266,7 +271,7 @@ public class Messenger {
     	boolean mode = false;
 		try {
 			m = listenerAdapter.getMethod("isGUIModeOn");
-		} catch (NoSuchMethodException | SecurityException e) {
+		} catch (NoSuchMethodException | SecurityException | NullPointerException e) {
 			e.printStackTrace();
 		}
 		try {

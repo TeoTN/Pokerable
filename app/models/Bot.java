@@ -6,9 +6,11 @@ public class Bot extends Player
 	private HandRankBot hrb;
 	private List<Card> toChange;
 	private int moneyAtBeginning = 0;
+	private Printer printer;
 
 	public Bot(String host, int port) {
 		super(host, port);
+		printer = super.getPrinter();
 	}
 	
 	public void run() { 
@@ -30,14 +32,14 @@ public class Bot extends Player
 		}
 		
 		toChange = hrb.getChangeList(getHandToString());
-		Printer.print("I will change "+toChange.size() + " cards.");
+		printer.print("I will change "+toChange.size() + " cards.");
 		String msg = getHandToString();
 		if (toChange.size()>=0 && toChange.size() <=4){
 			for (Card c: toChange) {
 				msg+="|"+c.toString();
 			}
 			if (toChange.size()>0)
-				Printer.print(msg.substring(15, msg.length()));
+				printer.print(msg.substring(15, msg.length()));
 		}
 		msgr.broadcast("CHANGE|"+msg); 
 	}

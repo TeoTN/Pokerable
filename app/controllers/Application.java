@@ -21,15 +21,15 @@ public class Application extends Controller {
     /**
      * Handle the chat websocket.
      */
-    public static WebSocket<JsonNode> webSocketMgr(final int id) {
-        return new WebSocket<JsonNode>() {
+    public static WebSocket<String> webSocketMgr(final int id) {
+        return new WebSocket<String>() {
             
             // Called when the Websocket Handshake is done.
-            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out){
-            	in.onMessage(new Callback<JsonNode>() {
-                    public void invoke(JsonNode event) {
-                        String eventStr = event.get("text").asText();
-                        PlayerManager.broadcastWith(id, eventStr);
+            public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out){
+            	PlayerManager.bindWS(id, in, out);
+            	in.onMessage(new Callback<String>() {
+                    public void invoke(String event) {
+                        PlayerManager.broadcastWith(id, event);
                     } 
                  });
                  

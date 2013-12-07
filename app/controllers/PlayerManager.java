@@ -3,7 +3,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import play.*;
+import play.libs.Json;
 import play.mvc.*;
 import views.html.*;
 import models.*;
@@ -48,5 +51,9 @@ public class PlayerManager extends Controller {
 	public static void broadcastWith(int id, String msg) {
 		Player instance = players.get(id);
 		instance.broadcastRemotely(msg);
+	}
+	
+	public static void bindWS(final int id, WebSocket.In<String> in, WebSocket.Out<String> out) {
+		players.get(id).bindWS(in, out);
 	}
 }

@@ -122,7 +122,7 @@ public class Server extends Thread
 		//Ask players for BET whenever anyone in game is below highest bet 
 		boolean isOnePlayer1 = bet(1);
 		
-		if(!isOnePlayer1)
+		if(isOnePlayer1)
 		{
 			//Ask players if they want to change cards
 			for (ClientThread currPlayer: clientThreads) {
@@ -135,7 +135,7 @@ public class Server extends Thread
 			//Ask players for second bet
 			boolean isOnePlayer2 = bet(2);
 			
-			if(!isOnePlayer2)
+			if(isOnePlayer2)
 			{
 				//Assessing hands
 				for (PlayerData pd: pData) {

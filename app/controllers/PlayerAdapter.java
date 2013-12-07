@@ -32,7 +32,7 @@ public class PlayerAdapter extends Controller {
 		}
 		players.add(lastID++, instance);
 		instance.start();
-		return ok(player.render(type, instance.id));
+		return ok(player.render(type, lastID-1));
 		//return ok(player.render(type, instance));
 	}
 	

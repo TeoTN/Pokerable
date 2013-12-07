@@ -205,7 +205,7 @@ public class Server extends Thread
 					e.printStackTrace();
 				}
 		 	 }
-		 	 System.out.println(" ");
+		 	 System.out.println("\n");
 		 	 
 			 for (ClientThread cth: clientThreads) {
 				 PlayerData pd = getPlayerData(cth.getID());
@@ -321,7 +321,7 @@ public class Server extends Thread
 				e.printStackTrace();
 			}
 		}
-		System.out.println("");
+		System.out.println("\n");
 		
 		 System.out.println("Expected number of players has connected.");
 		 System.out.println("Let's play the game.");

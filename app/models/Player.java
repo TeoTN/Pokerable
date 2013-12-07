@@ -12,7 +12,6 @@ import controllers.Messenger;
  */
 public abstract class Player extends Thread
 {
-	public int id;
 	protected Messenger msgr;
 	protected int accountBalance;
 	int wins;		//number of won games
@@ -35,7 +34,6 @@ public abstract class Player extends Thread
 	Player(String host, int port) {
 		this.port = port;
 		this.host = host;
-		id = lastID++;
 	}
 	
 	

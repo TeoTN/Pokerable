@@ -5,7 +5,11 @@ $(function() {
  	var chatSocket = new WS("@routes.Application.webSocketMgr(id).webSocketURL(request)")
 
     var sendMessage = function() {
-        chatSocket.send($("#talk").val())
+    	var msg = $("#talk").val()
+        chatSocket.send(msg)
+        var el = $('<div class="sent"></div>')
+        $(el).text(msg)
+        $('#console').append(el)
         $("#talk").val('')
     }
 

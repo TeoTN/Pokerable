@@ -1,5 +1,6 @@
 package models;
-public class Human extends Player {
+public class Human extends Player
+{
 	public Human(String host, int port) {
 		super(host, port);
 	}

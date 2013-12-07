@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * @author Piotr Staniów
  * Equivalent of Table class
  */
 public class Server extends Thread
@@ -94,6 +93,12 @@ public class Server extends Thread
 			cth.displayAccount(getPlayerData(id).getBalance());
 		}
 		
+		//Set isBetting field to 'true' for all players at the very beginning
+		for (PlayerData pd: pData) {
+			pd.setIsBetting();
+		}
+		
+		
 		//Reset variables
 		changedHands = 0;
 		pot = 0;
@@ -115,33 +120,54 @@ public class Server extends Thread
 		}
 		
 		//Ask players for BET whenever anyone in game is below highest bet 
-		bet(1);
+		boolean isOnePlayer1 = bet(1);
 		
-		//Ask players if they want to change cards
-		for (ClientThread currPlayer: clientThreads) {
-			currPlayer.queueBroadcast("PROMPTCHANGE");
-		}
-
-		//Ask players for second bet
-		bet(2);
-		
-		//Assessing hands
-		for (PlayerData pd: pData) {
-			while (pd.getHand() == null  || changedHands<players) {
-				try {
-					sleep(1000);
+		if(!isOnePlayer1)
+		{
+			//Ask players if they want to change cards
+			for (ClientThread currPlayer: clientThreads) {
+				
+				if(getPlayerData(currPlayer.id).getIsBetting()){
+					currPlayer.queueBroadcast("PROMPTCHANGE");
 				}
-				catch (InterruptedException e) {}
+			}
+	
+			//Ask players for second bet
+			boolean isOnePlayer2 = bet(2);
+			
+			if(!isOnePlayer2)
+			{
+				//Assessing hands
+				for (PlayerData pd: pData) {
+					while (pd.getHand() == null  || changedHands<players) {
+						try {
+							sleep(1000);
+						}
+						catch (InterruptedException e) {}
+					}
+				}
 			}
 		}
-
+		
 		/* Get player with the strongest Hand
 		 * new Comparator is set due to fact that PlayerData is already Comparable,
 		 * but compareTo returns which player has more wins 
 		 */
 		PlayerData winning = Collections.max(pData, new Comparator<PlayerData>() {
 			   @Override
-			   public int compare(PlayerData first, PlayerData second) {
+			   public int compare(PlayerData first, PlayerData second)
+			   {
+				   if(!first.getIsBetting() && !first.getIsBetting()){
+					   return 0;
+				   }
+				   
+				   if(!first.getIsBetting()){
+					   return -1;
+				   }
+				   if(!second.getIsBetting()){
+					   return 1;
+				   }
+				   
 			       return first.getHand().compareTo(second.getHand());
 			   }
 			});
@@ -182,11 +208,28 @@ public class Server extends Thread
 		}
 	}
 
-	private void bet(int i)
+	private boolean bet(int i)
 	{
 		//numberOfBets will be ZERO unless all players either have the same bet or are not in game 
+		
+		//System.out.println("AAALE KIEŁBASĘ WALI STACHU W MŁYNIE BOLI GOOO...");
+		
+		int cnt_isBetting = 0;
+		for (PlayerData pd: pData)
+		{
+			if(pd.getIsBetting()){
+				cnt_isBetting ++;
+			}
+		}
+		
+		if(cnt_isBetting <= 1){
+			return false;
+		}
+		
+		
 		numberOfBets = 0;
-		while (numberOfBets == 0) {
+		while (numberOfBets == 0)
+		{
 			for (ClientThread currPlayer: clientThreads) {
 				PlayerData pd = getPlayerData(currPlayer.getID());
 				if (pd.getPreviousBet() < ClientThread.getHighestBet() || pd.getPreviousBet() == 0) {
@@ -206,12 +249,13 @@ public class Server extends Thread
 			}
 			System.out.println("\n");
 			
-			for (ClientThread cth: clientThreads) {
+			for (ClientThread cth: clientThreads)
+			{
 				PlayerData pd = getPlayerData(cth.getID());
 				
 				//System.err.println(pd.isInGame() + ", "+ pd.getPreviousBet()+", "+ ClientThread.getHighestBet());
 				
-				if (pd.isInGame() == true && pd.getPreviousBet() < ClientThread.getHighestBet()) {
+				if (pd.getIsBetting() == true && pd.getPreviousBet() < ClientThread.getHighestBet()) {
 					numberOfBets = 0;
 				}
 			}
@@ -219,7 +263,7 @@ public class Server extends Thread
 		ClientThread.resetBet();
 		resetBet();
 		ClientThread.resetAllowedThread();
-		return;
+		return true;
 	}
 
 	private void resetBet() {
@@ -228,7 +272,8 @@ public class Server extends Thread
 		}
 	}
 
-	public void run() {
+	public void run()
+	{
 		System.out.println("Server successfully created.");
 		//Prompt user to specify a number of players that will join the game
 		while (players<2 || players>4) {

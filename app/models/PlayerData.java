@@ -6,6 +6,7 @@ public class PlayerData implements Comparable<PlayerData> {
 	private int balance,  wins, previousBet;
 	private boolean sentWins;
 	private boolean inGame, allIn;
+	private boolean isBetting;
 	
 	public PlayerData() {
 		hand = null;
@@ -14,6 +15,7 @@ public class PlayerData implements Comparable<PlayerData> {
 		sentWins = false;
 		inGame = true;
 		allIn = false;
+		isBetting = true;
 	}
 	
 	public String getName() {
@@ -26,6 +28,10 @@ public class PlayerData implements Comparable<PlayerData> {
 
 	public int getBalance() {
 		return balance;
+	}
+	
+	public void setIsBetting() {
+		isBetting = true;
 	}
 
 	public void setBalance(int balance) {
@@ -82,6 +88,10 @@ public class PlayerData implements Comparable<PlayerData> {
 	public int getPreviousBet() {
 		return previousBet;
 	}
+	
+	public boolean getIsBetting() {
+		return isBetting;
+	}
 
 	public void setPreviousBet(int previousBet) {
 		this.previousBet = previousBet;
@@ -93,5 +103,9 @@ public class PlayerData implements Comparable<PlayerData> {
 
 	public void setAllIn(boolean wasAllIn) {
 		this.allIn = wasAllIn;
+	}
+	
+	public void setIsBetting(boolean isBetting) {
+		this.isBetting = isBetting;
 	}
 }

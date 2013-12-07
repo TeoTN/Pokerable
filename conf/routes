@@ -4,8 +4,8 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-GET		/join/:type					controllers.PlayerAdapter.newInstance(type:String)
-POST	/setUserName/:id			controllers.PlayerAdapter.connected(id:Integer)
+GET		/join/:type					controllers.PlayerManager.newInstance(type:String)
+POST	/setUserName/:id			controllers.PlayerManager.connected(id:Integer)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -13,7 +13,7 @@ import models.*;
  * @author Piotr Staniów
  *
  */
-public class PlayerAdapter extends Controller {
+public class PlayerManager extends Controller {
 	public static int lastID = 0;
 	static List<Player> players = new ArrayList<Player>();
 	

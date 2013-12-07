@@ -42,10 +42,11 @@ public class PlayerManager extends Controller {
 		String name = values.get("playerName")[0];
 		instance.sendPlayerName(name);
 		instance.setGUIconnected();
-		return ok(gameplay.render());
+		return ok(gameplay.render(id));
 	}
 	
-	/*public static Result gameplay() {
-		return ok(gameplay.render());
-	}*/
+	public static void broadcastWith(int id, String msg) {
+		Player instance = players.get(id);
+		instance.broadcastRemotely(msg);
+	}
 }

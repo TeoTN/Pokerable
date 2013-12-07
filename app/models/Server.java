@@ -104,6 +104,8 @@ public class Server extends Thread
 		pot = 0;
 		numberOfBets = 0;
 		
+		System.out.println("START");
+		
 		//Give players their hands
 		for (ClientThread currPlayer: clientThreads) {
 			Hand h = null;
@@ -120,9 +122,11 @@ public class Server extends Thread
 		}
 		
 		//Ask players for BET whenever anyone in game is below highest bet 
-		boolean isOnePlayer1 = bet(1);
+		boolean isNotOnePlayer1 = bet(1);
 		
-		if(isOnePlayer1)
+		System.out.println("Nie ma pan siusiaka");
+		
+		if(isNotOnePlayer1)
 		{
 			//Ask players if they want to change cards
 			for (ClientThread currPlayer: clientThreads) {
@@ -131,11 +135,11 @@ public class Server extends Thread
 					currPlayer.queueBroadcast("PROMPTCHANGE");
 				}
 			}
-	
+			System.out.println("Słoiki nadziewane sedeseeem");
 			//Ask players for second bet
-			boolean isOnePlayer2 = bet(2);
-			
-			if(isOnePlayer2)
+			boolean isNotOnePlayer2 = bet(2);
+			System.out.println("Ale kiełbasę wali Stachu w młynie boli go");
+			if(isNotOnePlayer2)
 			{
 				//Assessing hands
 				for (PlayerData pd: pData) {
@@ -148,6 +152,8 @@ public class Server extends Thread
 				}
 			}
 		}
+		
+		System.out.println("Kancelaria! Kancelaria! Kancelaria");
 		
 		/* Get player with the strongest Hand
 		 * new Comparator is set due to fact that PlayerData is already Comparable,
@@ -221,6 +227,7 @@ public class Server extends Thread
 		}
 		
 		if(cnt_isBetting <= 1){
+			System.out.println("Szli z garem! 1");
 			return false;
 		}
 		
@@ -261,6 +268,21 @@ public class Server extends Thread
 		ClientThread.resetBet();
 		resetBet();
 		ClientThread.resetAllowedThread();
+		
+		cnt_isBetting = 0;
+		for (PlayerData pd: pData)
+		{
+			if(pd.getIsBetting()){
+				cnt_isBetting ++;
+			}
+		}
+		
+		if(cnt_isBetting <= 1){
+			System.out.println("Szli z garem! 2");
+			return false;
+		}
+		
+		System.out.println("Coli z wódką dać!");
 		return true;
 	}
 

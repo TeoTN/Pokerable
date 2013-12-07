@@ -1,17 +1,12 @@
 package models;
 import java.net.*;
-import java.util.Scanner;
 import java.io.*;
 
 import play.mvc.WebSocket;
 import play.mvc.WebSocket.Out;
 import controllers.Messenger;
 
-/**
- *  @author Piotr Stani�w
- * @author Micha� Kie�bowicz
- *
- */
+
 public abstract class Player extends Thread
 {
 	protected Messenger msgr;

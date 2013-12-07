@@ -14,15 +14,17 @@ import controllers.Messenger;
 public class ClientThread extends Thread {
 	private Socket socket;
 	private Messenger msgr;
+	
 	int id;
     BufferedReader in = null;
     PrintWriter out = null;
     String msg = "";
+    
 	private Deck deck;
+	private String myName;
 	static int allowedThread=0;
 	static Object lock = null;
 	static int highestBet = 0, previousBet = 0, myPreviousBet = 0;
-	private String myName;
     
     /**
      * Constructor for instantiation
@@ -37,8 +39,9 @@ public class ClientThread extends Thread {
 		this.id = id;
 		deck = Deck.getInstance();
 		//A lock for further synchronization of clients' threads is created
-		if (lock == null)
+		if (lock == null) {
 			lock = new Object();
+		}
 	}
 	
 	/**
@@ -122,17 +125,22 @@ public class ClientThread extends Thread {
 	 * 
 	 * @param param Data describing bet [type]|[amount]
 	 */
-	public void bet(String param) {
+	public void bet(String param)
+	{
 		String[] params = param.split("\\|");
+		
 		PlayerData pd;
 		pd = Server.getPlayerData(id);
+		
 		int currentBalance = pd.getBalance(); 
 		boolean isDone = false;
 		int bet = 0;
-		switch (params[0]) {
+		
+		switch (params[0])
+		{
 			case "CHECK":
 				if (highestBet != 0) {
-					msgr.broadcast("ERROR|BET|Unable to check when previous bet is not zero pounds");
+					msgr.broadcast("ERROR|BET|Unable to check when previous bet is not zero");
 				}
 				else {
 					System.out.println("Player "+myName+" is checking.");
@@ -185,7 +193,7 @@ public class ClientThread extends Thread {
 				}
 				break;
 			case "FOLD":
-				pd.setInGame(false);
+				pd.setIsBetting(false);
 				isDone = true;
 				System.out.println("Player "+myName+" is folding");
 				break;
@@ -200,7 +208,7 @@ public class ClientThread extends Thread {
 				}
 				else {
 					msgr.broadcast("ERROR|BET|You have no money.");
-					pd.setInGame(false);
+					pd.setIsBetting(false);
 					isDone=true;
 				}
 				break;

@@ -395,9 +395,4 @@ public class HandRank implements Comparable<HandRank>
 		missingCards[8]  = 0;
 		bestCard[8]      = cards.get(cards.size()-1);
 	}
-	
-	/*public Hand getAssessedHand() {
-		assessedHand.sort();
-		return assessedHand;
-	}*/
 }

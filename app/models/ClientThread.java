@@ -234,6 +234,7 @@ public class ClientThread extends Thread {
 		if (name.equals("Player") || name.equals("Bot"))
 			name+=" "+String.valueOf(id);
 		Server.getPlayerData(id).setName(name);
+		Server.incNumberOfHandshakes();
 		myName = name;
 		System.out.println("Player #"+id+" is now: "+name);
 	}

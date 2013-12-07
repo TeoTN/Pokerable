@@ -25,6 +25,7 @@ public class Server extends Thread
 	private static Server instance;
 	private static int pot=0;
 	private static int numberOfBets = 0;
+	private static int numberOfHandshakes = 0;
 	
 	private Server() throws Exception {
 		this(1700);
@@ -305,7 +306,19 @@ public class Server extends Thread
 	        	 System.err.println("\nSevere error: interrupted server thread. Exit.");
 	        	 System.exit(-1);
 	         }
-		 } /* END OF WHILE - WAITING FOR CLIENTS */
+		 }
+		
+		//Wait for handshake & player names
+		System.out.print("Waiting for handshakes");
+		while (numberOfHandshakes < players) {
+			System.out.print(".");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("");
 		
 		 System.out.println("Expected number of players has connected.");
 		 System.out.println("Let's play the game.");
@@ -395,5 +408,9 @@ public class Server extends Thread
 	
 	public static void incNumberOfBets() {
 		numberOfBets++;
+	}
+	
+	public static void incNumberOfHandshakes() {
+		numberOfHandshakes++;
 	}
 }

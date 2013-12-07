@@ -12,6 +12,7 @@ import controllers.Messenger;
  */
 public abstract class Player extends Thread
 {
+	long id;
 	protected Messenger msgr;
 	protected int accountBalance;
 	int wins;		//number of won games
@@ -24,6 +25,7 @@ public abstract class Player extends Thread
 	String msg = "";
 	String host;
 	private static boolean isGUIModeOn = false;
+	private boolean GUIconnected = false;
 	
 	Player() {
 		this("localhost", 1700);
@@ -60,9 +62,20 @@ public abstract class Player extends Thread
 	    	e.printStackTrace();
 	    }
 	    msgr = new Messenger(this);
-	    String name = promptName();
-	    msgr.broadcast("CONNECTED|"+name);
-	    msgr.receive();
+	    if (!Player.isGUIModeOn()) {
+	    	String name = promptName();
+	    	sendPlayerName(name);
+	    }
+	    else {
+	    	while (GUIconnected != true) {
+	    		try {
+					sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+    	msgr.receive();
 	}
 	
 	//TODO While interrupted broadcast message "DISCONNECTED"
@@ -177,5 +190,9 @@ public abstract class Player extends Thread
 
 	public static void setGUIMode(boolean isGUIModeOn) {
 		Player.isGUIModeOn = isGUIModeOn;
+	}
+	
+	public void sendPlayerName(String name) {
+		msgr.broadcast("CONNECTED|"+name);
 	}
 }

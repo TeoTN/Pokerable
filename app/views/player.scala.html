@@ -1,19 +1,16 @@
-@(typeStr: String, playerHandle: Player)
+@(typeStr: String, id: Int)
 @import models.Player
 
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Pokerable</title>
-</head>
-<body>
-	<h1>Successfully created and started player of type @typeStr</h1>
-		@if(typeStr=="human") {
-			<form>
-				<label for="playerName">Enter your name:</label>
+@main {
+	<h1>Preparing to play as @typeStr</h1>
+		<form method="POST" action="../setUserName/@id">
+			@if(typeStr=="human") {
+				<label for="playerName">Enter name of player:</label>
 				<input type="text" name="playerName" id="playerName" placeholder="e.g. John">
-				<input type="submit" value="OK">
-			</form>
-		}
-</body>
-</html>
+			}
+			@if(typeStr=="bot") {
+				<input type="hidden" name="playerName" id="playerName" value="Bot @id">
+			}
+			<input type="submit" value="Join">
+		</form>
+}

@@ -12,6 +12,7 @@ public class Messenger {
 	private PrintWriter out;
 	private Object listener;
 	private String msg;
+	private String className;
 	
 	public Messenger(Object arg) {
 		listener = arg;
@@ -19,10 +20,13 @@ public class Messenger {
 
 		Method getInput = null;
 		Method getOutput = null;
-		
+		className = listener.getClass().getName();
+		if (className.equals("Player") && isGUIModeOn()) {
+			
+		}
 		//Initialize input/output
 		try {
-			listenerAdapter = Class.forName(listener.getClass().getName());
+			listenerAdapter = Class.forName(className);
 		}
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -61,7 +65,6 @@ public class Messenger {
 				break;
 			}
 			//if (!msg.equals("")) System.out.println("  { DEBUG: "+msg+"}"); // DEBUG
-			
 			if ("END".equals(msg)) {
 				Class cl = listener.getClass();
 				String nameOfClass = cl.getName();
@@ -71,28 +74,7 @@ public class Messenger {
             	}
                 return;
             }
-            else if (msg.startsWith("CONNECTED")) {
-            	System.out.println("Client connected.");
-            	msg = msg.replace("CONNECTED|", "");
-            	performMethod("setPlayerName", msg);
-            	broadcast("WELCOME");
-            }
-            else if (msg.startsWith("HAND")) {
-            	msg = msg.replace("HAND|", "");
-            	performMethod("setHand", msg);
-            }
-            else if (msg.startsWith("CHANGE")) {
-            	msg = msg.replace("CHANGE|", "");
-            	performMethod("changeHand", msg.toUpperCase());
-            }
-            else if (msg.startsWith("WINS")) {
-            	String[] arr = msg.split("\\|");
-            	Server.setWinsOfId(getID(), Integer.parseInt(arr[1]));
-            	Server.setWinsSentOfId(getID());
-            }
-            else if ("WELCOME".equals(msg)) {
-            	System.out.println("Connected to server. Waiting for other players to join...");
-            }
+			//Messages from server
             else if (msg.startsWith("SETHAND")) {
             	msg = msg.replace("SETHAND|", "");
             	performMethod("setHand", msg);
@@ -104,10 +86,6 @@ public class Messenger {
             	msg = msg.replace("PROMPTBET|", "");
             	performMethod("setMoneyAtBeginning");
             	performMethod("promptBet", msg); 
-            }
-            else if (msg.startsWith("SETBET")) {
-            	msg = msg.replace("SETBET|", "");
-            	performMethod("bet", msg);
             }
             else if (msg.startsWith("DISPLAYMONEY")) {
             	msg = msg.replace("DISPLAYMONEY|", "");
@@ -146,6 +124,33 @@ public class Messenger {
             		System.out.println(arr[2]);
             		performMethod("promptBet", "");
             	}
+            }
+			//Messages from client
+            else if (msg.startsWith("CONNECTED")) {
+            	System.out.println("Client connected.");
+            	msg = msg.replace("CONNECTED|", "");
+            	performMethod("setPlayerName", msg);
+            	broadcast("WELCOME");
+            }
+            else if (msg.startsWith("HAND")) {
+            	msg = msg.replace("HAND|", "");
+            	performMethod("setHand", msg);
+            }
+            else if (msg.startsWith("CHANGE")) {
+            	msg = msg.replace("CHANGE|", "");
+            	performMethod("changeHand", msg.toUpperCase());
+            }
+            else if (msg.startsWith("WINS")) {
+            	String[] arr = msg.split("\\|");
+            	Server.setWinsOfId(getID(), Integer.parseInt(arr[1]));
+            	Server.setWinsSentOfId(getID());
+            }
+            else if ("WELCOME".equals(msg)) {
+            	System.out.println("Connected to server. Waiting for other players to join...");
+            }
+            else if (msg.startsWith("SETBET")) {
+            	msg = msg.replace("SETBET|", "");
+            	performMethod("bet", msg);
             }
 		}
 	}
@@ -194,5 +199,22 @@ public class Messenger {
 			e.printStackTrace();
 		}
 		return id;
+	}
+	
+	private boolean isGUIModeOn() {
+		Method m = null;
+    	boolean mode = false;
+		try {
+			m = listenerAdapter.getMethod("isGUIModeOn");
+		} catch (NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+		try {
+			mode = (boolean) m.invoke(listener);
+		} catch (IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return mode;
 	}
 }

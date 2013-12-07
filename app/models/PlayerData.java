@@ -5,7 +5,7 @@ public class PlayerData implements Comparable<PlayerData> {
 	private String name;
 	private int balance,  wins, previousBet;
 	private boolean sentWins;
-	private boolean inGame;
+	private boolean inGame, allIn;
 	
 	public PlayerData() {
 		hand = null;
@@ -13,6 +13,7 @@ public class PlayerData implements Comparable<PlayerData> {
 		previousBet = balance = wins = 0;
 		sentWins = false;
 		inGame = true;
+		allIn = false;
 	}
 	
 	public String getName() {
@@ -84,5 +85,13 @@ public class PlayerData implements Comparable<PlayerData> {
 
 	public void setPreviousBet(int previousBet) {
 		this.previousBet = previousBet;
+	}
+
+	public boolean isAllIn() {
+		return allIn;
+	}
+
+	public void setAllIn(boolean wasAllIn) {
+		this.allIn = wasAllIn;
 	}
 }

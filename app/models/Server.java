@@ -212,8 +212,6 @@ public class Server extends Thread
 	{
 		//numberOfBets will be ZERO unless all players either have the same bet or are not in game 
 		
-		//System.out.println("AAALE KIEŁBASĘ WALI STACHU W MŁYNIE BOLI GOOO...");
-		
 		int cnt_isBetting = 0;
 		for (PlayerData pd: pData)
 		{

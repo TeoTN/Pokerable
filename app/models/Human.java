@@ -1,6 +1,5 @@
 package models;
-public class Human extends Player
-{
+public class Human extends Player {
 	private Printer printer;
 	public Human(String host, int port) {
 		super(host, port);

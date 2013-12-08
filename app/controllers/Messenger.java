@@ -99,6 +99,10 @@ public class Messenger {
             	msg = msg.replace("DISPLAYMONEY|", "");
             	performMethod("displayMoney", msg); 
             }
+            else if (msg.startsWith("PREVIOUSBET")) {
+            	msg = msg.replace("PREVIOUSBET|", "");
+            	performMethod("previousBet", msg); 
+            }
             else if (msg.startsWith("WIN")) {
             	performMethod("win");
             }
@@ -192,6 +196,10 @@ public class Messenger {
 	        	performMethod("dispatchGUI", msg); 
 	        	msg = msg.replace("DISPLAYMONEY|", "");
 	        }
+            else if (msg.startsWith("PREVIOUSBET")) {
+            	msg = msg.replace("PREVIOUSBET|", "");
+            	performMethod("previousBet", msg); 
+            }
 	        else if (msg.startsWith("WIN")) {
 	        	performMethod("win");
 	        }
@@ -268,22 +276,5 @@ public class Messenger {
 			e.printStackTrace();
 		}
 		return id;
-	}
-	
-	private boolean isGUIModeOn() {
-		Method m = null;
-    	boolean mode = false;
-		try {
-			m = listenerAdapter.getMethod("isGUIModeOn");
-		} catch (NoSuchMethodException | SecurityException | NullPointerException e) {
-			e.printStackTrace();
-		}
-		try {
-			mode = (boolean) m.invoke(listener);
-		} catch (IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		return mode;
 	}
 }

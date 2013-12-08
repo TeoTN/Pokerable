@@ -1,7 +1,4 @@
 package controllers;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import play.*;
 import play.libs.F.Callback;
 import play.libs.F.Callback0;
 import play.mvc.*;
@@ -14,14 +11,13 @@ public class Application extends Controller {
     }
     
     public static Result webSocketMgrJs(int id) {
-    	//return ok(views.html.WebSocketMgr.render(id)).as("application/javascript");
         return ok(views.js.WebSocketMgr.render(id));
     }
     
     /**
      * Handle the chat websocket.
      */
-    public synchronized static WebSocket<String> webSocketMgr(final int id) {
+    public static WebSocket<String> webSocketMgr(final int id) {
         return new WebSocket<String>() {
             
             // Called when the Websocket Handshake is done.

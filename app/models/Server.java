@@ -88,10 +88,16 @@ public class Server extends Thread
 		broadcastAll("ROUND|"+String.valueOf(round));
 		System.out.println("\nRound "+round);
 		
+		pot = 0;
+		
 		//Inform players about their current account status
 		for (ClientThread cth: clientThreads) {
 			int id = cth.getID();
-			cth.displayAccount(getPlayerData(id).getBalance());
+			int bal = getPlayerData(id).getBalance();
+			//Wpisowe
+			getPlayerData(id).setBalance(bal - 20);
+			incPot(20);
+			cth.displayAccount(bal);
 		}
 		
 		//Set isBetting field to 'true' for all players at the very beginning
@@ -102,7 +108,6 @@ public class Server extends Thread
 		
 		//Reset variables
 		changedHands = 0;
-		pot = 0;
 		numberOfBets = 0;
 		
 		System.out.println("START");
@@ -220,26 +225,37 @@ public class Server extends Thread
 		//numberOfBets will be ZERO unless all players either have the same bet or are not in game 
 		
 		int cnt_isBetting = 0;
+		PlayerData last = null;
 		for (PlayerData pd: pData)
 		{
 			if(pd.getIsBetting()){
 				cnt_isBetting ++;
+				last = pd;
 			}
 		}
 		
 		if(cnt_isBetting <= 1){
 			System.out.println("Szli z garem! 1");
+			last.addBalance(getPot());
+			pot = 0;
 			return false;
 		}
 		
 		
 		numberOfBets = 0;
+		int roundrobin = 0;
 		while (numberOfBets == 0)
 		{
 			for (ClientThread currPlayer: clientThreads) {
 				PlayerData pd = getPlayerData(currPlayer.getID());
 				if (pd.getPreviousBet() < ClientThread.getHighestBet() || pd.getPreviousBet() == 0) {
-					currPlayer.queueBroadcast("PROMPTBET|"+i+"|"+ClientThread.getHighestBet());
+					String permittedBets = "";
+					if (roundrobin == 0) {
+						permittedBets = "CHECK|BET|FOLD|ALLIN";
+					}
+					else permittedBets = "RAISE|CALL|FOLD|ALLIN";
+					currPlayer.queueBroadcast("PROMPTBET|"+i+"|"+getPot()+"|"+permittedBets);
+					roundrobin++;
 				}
 				else numberOfBets++;
 			}

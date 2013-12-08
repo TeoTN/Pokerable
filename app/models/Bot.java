@@ -49,14 +49,13 @@ public class Bot extends Player
 	 * Documentation and usage available in Player class
 	 * @see Player
 	 * @param String
-	 *		Nr licytacji | Początkowy stan konta (z początku rundy) | Aktualna stawka
+	 *		Nr licytacji | Początkowy stan konta (z początku rundy) | Dozwolone zakłady 
 	 */
 	@Override
 	public void promptBet(String data) 
 	{
 		String[] arr = data.split("\\|");
 		int a = Integer.parseInt(arr[0]);
-		int b = Integer.parseInt(arr[1]);
 		
 		try {
 			hrb = new HandRankBot(getHandToString());
@@ -65,7 +64,7 @@ public class Bot extends Player
 			e.printStackTrace();
 		}
 		
-		String out = BotStrategy.strategy1(accountBalance, a, getMoneyAtBeginning(), b, amIBluffing, hrb);
+		String out = BotStrategy.strategy1(accountBalance, a, getMoneyAtBeginning(), highestBet, amIBluffing, hrb);
 		
 		if(out.charAt(out.length()-1) == 'F') {
 			amIBluffing = true;

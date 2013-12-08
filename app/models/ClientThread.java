@@ -220,6 +220,7 @@ public class ClientThread extends Thread {
 		if (isDone == true) {
 			pd.setBalance(currentBalance);
 			pd.setPreviousBet(myPreviousBet);
+			getServer().broadcastAll("PREVIOUSBET|"+getHighestBet()+"|"+myName+"|"+Server.getPot()+"|"+param);
 			Server.incNumberOfBets();
 			moveLockToNextPlayer();
 		}

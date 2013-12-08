@@ -3,10 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import play.*;
-import play.libs.Json;
 import play.mvc.*;
 import views.html.*;
 import models.*;
@@ -36,7 +32,6 @@ public class PlayerManager extends Controller {
 		players.add(lastID++, instance);
 		instance.start();
 		return ok(player.render(type, lastID-1));
-		//return ok(player.render(type, instance));
 	}
 	
 	public static Result connected(Integer id) {

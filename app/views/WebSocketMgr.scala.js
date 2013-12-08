@@ -3,8 +3,12 @@
 $(function() {
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
  	var chatSocket = new WS("@routes.Application.webSocketMgr(id).webSocketURL(request)")
-	
+	if (chatSocket.readyState == 3)
+		alert("Unable to establish webSocket connection");
 	var hand = "";
+	$('#bet').hide();
+	var pot = 0;
+	var previousBet = "nobody";
 	
     var sendMessage = function() {
     	var msg = $("#talk").val()
@@ -32,6 +36,7 @@ $(function() {
         		$('#hand').append('<img src="/assets/images/cards/'+msgArray[3]+'.png" class="card" id="'+msgArray[3]+'">');
         		$('#hand').append('<img src="/assets/images/cards/'+msgArray[4]+'.png" class="card" id="'+msgArray[4]+'">');
         		$('#hand').append('<img src="/assets/images/cards/'+msgArray[5]+'.png" class="card" id="'+msgArray[5]+'">');
+        		previousBet = 'nobody';
         	break;
         	
         	case "PROMPTCHANGE":
@@ -40,7 +45,65 @@ $(function() {
         		$('.card').addClass('clickable');
         		bindChanger();
         	break;
+        	
+        	case "ROUND":
+
+        	break;
+        	
+        	case "PROMPTBET":
+        		var b = $('#bet');
+        		b.empty();
+        		b.append("<p>Let's gamble</p>");
+        		b.append('<p>Current pot:'+pot+'<br>Previous bet was by '+previousBet+'</p>');
+        		b.append('<button id="'+msgArray[3]+'" class="bet">'+msgArray[3]+'</button>');
+        		b.append('<button id="'+msgArray[4]+'" class="bet">'+msgArray[4]+'</button>');
+        		b.append('<button id="'+msgArray[5]+'" class="bet">'+msgArray[5]+'</button>');
+        		b.append('<button id="'+msgArray[6]+'" class="bet">'+msgArray[6]+'</button>');
+				bindBet();
+				b.show();
+        	break;
+        	
+        	case "PREVIOUSBET":
+        		pot = msgArray[3];
+        		previousBet = msgArray[2] + ": " + msgArray[4];
+        	break;
+        	
+        	case "DISPLAYMONEY":
+        		$('#money').text(msgArray[1]);
+        	break;
+        	
+        	case "ROUND":
+        		$('#round').text(msgArray[1]);
+        	break;
         }
+    }
+    
+    function bindBet() {
+    	$('.bet').on("click", function(e) {
+    		var g = $(this).attr('id');
+    		var b = $('#bet');
+    		if (g == 'RAISE' || g == 'BET') {
+    			b.empty();
+    			b.append('<input type="text" id="valueOfBet" placeholder="Value of your bet"><button id="setBet">SET</button>');
+    			$('#setBet').on("click", function(e) {
+    				v = $('#valueOfBet').val();
+    				msg = "SETBET|"+g+"|"+v;
+    				chatSocket.send(msg);
+					var el = $('<div class="sent"></div>')
+	        		$(el).text(msg)
+	        		$('#console').append(el)
+	        		$('#bet').hide()
+    			});
+    		}
+    		else {
+    		    msg = "SETBET|"+g;
+    			chatSocket.send(msg);
+				var el = $('<div class="sent"></div>')
+	        	$(el).text(msg)
+	        	$('#console').append(el)
+	        	$('#bet').hide()
+	        }
+    	});
     }
     
     function bindChanger() {

@@ -3,7 +3,6 @@ import java.net.*;
 import java.io.*;
 
 import play.mvc.WebSocket;
-import play.mvc.WebSocket.Out;
 import controllers.Messenger;
 
 
@@ -26,6 +25,7 @@ public abstract class Player extends Thread
 	private WebSocket.In<String> WSin;
 	private WebSocket.Out<String> WSout;
 	private Printer printer;
+	protected int highestBet = 0;
 	Player() {
 		this("localhost", 1700);
 	}
@@ -51,11 +51,11 @@ public abstract class Player extends Thread
 	        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	    }
 	    catch (UnknownHostException e) {
-	    	printer.print("Unable to reach host: localhost");
+	    	System.err.print("Unable to reach host: localhost");
 	    	System.exit(-1);
 	    }
 	    catch (IOException e) {
-	    	printer.print("Connection refused.");
+	    	System.err.print("Connection refused.");
 	    	System.exit(-1);
 	    }
 	    catch (Exception e) {
@@ -148,7 +148,7 @@ public abstract class Player extends Thread
 	
     @Override
     public void finalize() {
-        System.out.println("Server shut down");
+    	System.err.println("Disconnected");
         try {
             super.finalize();
         }
@@ -222,11 +222,16 @@ public abstract class Player extends Thread
 	}
 	
 	public void dispatchGUI(String msg) {
-		if (msg!=null)
-			printer.print(msg);
+		printer.print(msg);
 	}
 	
 	public WebSocket.Out<String> getWSout() {
 		return WSout;
+	}
+	
+	public void previousBet(String msg) {
+		String[] arr = msg.split("\\|");
+		highestBet = Integer.parseInt(arr[0]);
+		printer.print("PREVIOUSBET|"+msg);
 	}
 }

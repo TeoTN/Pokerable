@@ -141,6 +141,7 @@ public abstract class Player extends Thread
 			printer.print("Unable to create hand.");
 			ex.printStackTrace();
 		}
+		hand.sort();
 		printer.print("Your current hand is: "+getHandToString());
     	msgr.broadcast("HAND|"+getHandToString());
 	}
@@ -205,6 +206,13 @@ public abstract class Player extends Thread
 	}
 	
 	public void bindWS(WebSocket.In<String> in, WebSocket.Out<String> out) {
+		try {
+			if (in == null || out == null)
+				throw new Exception("Attaching null WebSocket to Player");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		WSin = in;
 		WSout = out;
 	}

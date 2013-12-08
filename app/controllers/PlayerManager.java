@@ -20,7 +20,7 @@ public class PlayerManager extends Controller {
 	public static int lastID = 0;
 	static List<Player> players = new ArrayList<Player>();
 	
-	public static Result newInstance(String type) {
+	public synchronized static Result newInstance(String type) {
 		type = type.toLowerCase();
 		Player.setGUIMode(true);
 		Player instance = null;

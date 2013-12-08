@@ -10,6 +10,7 @@ import java.util.Scanner;
 /**
  * Equivalent of Table class
  */
+
 public class Server extends Thread
 {
 	private ServerSocket server = null;

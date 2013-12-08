@@ -96,4 +96,15 @@ public class Hand implements Comparable<Hand>
 	public HandRank getHandRank() {
 		return handRank;
 	}
+	
+	public static String sortString(String hand) {
+		Hand h = null;
+		try {
+			h = new Hand(hand);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		h.sort();
+		return h.toString();
+	}
 }

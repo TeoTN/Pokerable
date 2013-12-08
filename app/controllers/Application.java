@@ -21,7 +21,7 @@ public class Application extends Controller {
     /**
      * Handle the chat websocket.
      */
-    public static WebSocket<String> webSocketMgr(final int id) {
+    public synchronized static WebSocket<String> webSocketMgr(final int id) {
         return new WebSocket<String>() {
             
             // Called when the Websocket Handshake is done.

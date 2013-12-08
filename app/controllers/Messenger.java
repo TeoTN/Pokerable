@@ -175,8 +175,9 @@ public class Messenger {
 				break;
 			}
 			if (msg.startsWith("SETHAND")) {
-				performMethod("dispatchGUI", msg);
-	        	msg = msg.replace("SETHAND|", "");
+				msg = msg.replace("SETHAND|", "");
+				msg = Hand.sortString(msg);
+				performMethod("dispatchGUI", "SETHAND|"+msg);
 	        	performMethod("setHand", msg);
 	        }
 	        else if (msg.startsWith("PROMPTCHANGE")) {

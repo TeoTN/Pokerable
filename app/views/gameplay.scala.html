@@ -1,10 +1,14 @@
 @(id:Int)
 @main {
-	<h1>Welcome to Pokerable the game</h1>
-	<div id="console">
-	
+	<div id="gameplay">
+		<p>Your hand:</p>
+		<div id="hand">
+			<p>Wait for other players to join the game...</p>
+		</div>
 	</div>
-	<textarea id="talk"></textarea>
-	
+	<div id="debug">
+		<div id="console"></div>
+		<textarea id="talk"></textarea>
+	</div>
 	<script type="text/javascript" charset="utf-8" src="@routes.Application.webSocketMgrJs(id)"></script>
 }

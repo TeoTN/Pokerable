@@ -5,12 +5,15 @@
 <html>
     <head>
         <title>Pokerable</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/style.min.css")">
         <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
     </head>
     <body>
+    <div id="bodyWrapper">
+    	<div id="logo">
+    		<img src="/assets/images/logo.png">
+    	</div>
         @content
+    </div>
     </body>
 </html>

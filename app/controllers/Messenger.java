@@ -64,9 +64,13 @@ public class Messenger {
 				break;
 			}
 			
-			if (GUImode && !className.contains("ClientThread")) {
+			if (GUImode && !className.contains("ClientThread") && !className.contains("Bot")) {
 				dispatchGUI(msg);
 				return;
+			}
+			
+			if (GUImode && className.contains("Bot")) {
+				performMethod("dispatchGUI", msg);
 			}
 			if (!msg.equals("")) System.out.println("  { DEBUG: "+msg+" in: "+className+"}"); // DEBUG
 			if ("END".equals(msg)) {
@@ -212,7 +216,6 @@ public class Messenger {
 	        		performMethod("finalize");
 	        	}
 	        	else if (arr[1].equals("BET")) {
-	        		performMethod("dispatchGUI", msg);
 	        		performMethod("promptBet", "");
 	        	}
 	        }

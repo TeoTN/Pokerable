@@ -28,7 +28,8 @@ public class HandRank implements Comparable<HandRank>
 	{
 		Collections.sort(cards); // Lowest to highest
 		
-		for(int i = 0 ; i < 9 ; i ++){
+		for(int i = 0 ; i < 9 ; i ++)
+		{
 			missingCards[i]         = 0;
 			try {
 				bestCard[i]         = new Card('C','2');

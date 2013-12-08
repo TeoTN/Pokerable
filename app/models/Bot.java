@@ -7,6 +7,7 @@ public class Bot extends Player
 	private List<Card> toChange;
 	private int moneyAtBeginning = 0;
 	private Printer printer;
+	private boolean amIBluffing = false;
 
 	public Bot(String host, int port) {
 		super(host, port);
@@ -56,7 +57,21 @@ public class Bot extends Player
 		String[] arr = data.split("\\|");
 		int a = Integer.parseInt(arr[0]);
 		int b = Integer.parseInt(arr[1]);
-		String out = BotStrategy.strategy1(accountBalance, a, getMoneyAtBeginning(), b, false, hrb);
+		
+		try {
+			hrb = new HandRankBot(getHandToString());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		String out = BotStrategy.strategy1(accountBalance, a, getMoneyAtBeginning(), b, amIBluffing, hrb);
+		
+		if(out.charAt(out.length()-1) == 'F') {
+			amIBluffing = true;
+			out = out.substring(0, out.length()-1);
+		}
+		
 		msgr.broadcast("SETBET|" + out);
 	}
 

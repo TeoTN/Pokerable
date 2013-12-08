@@ -25,7 +25,18 @@ public final class HandRankBot extends HandRank
 				return i;
 			}
 		}
-		return 10;
+		return 9;
+	}
+	
+	public int getSecondBestId()
+	{
+		for(int i = 0 ; i < 9 ; i ++)
+		{
+			if(missingCards[i] == 1){
+				return i;
+			}
+		}
+		return 9;
 	}
 	
 	public List<Card> getChangeList(List<Card> cards)

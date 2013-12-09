@@ -73,9 +73,9 @@ final class Main
 				throw new Exception("Incorrect type of player selected");
 			}
 		}
-		else if (args[0].equals("server")) {
+		else if (args[0].equals("server"))
+		{
 			System.out.println("Trying to run server...");
-			//TODO jUnit test
 			Server s = null;
 			int port = 1700;
 			if (args.length==2) {

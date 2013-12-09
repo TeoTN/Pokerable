@@ -25,6 +25,7 @@ public class Server extends Thread
 	private static int pot=0;
 	private static int numberOfBets = 0;
 	private static int numberOfHandshakes = 0;
+	int blind = 0;
 	
 	private Server() throws Exception {
 		this(1700);
@@ -95,8 +96,13 @@ public class Server extends Thread
 			int id = cth.getID();
 			int bal = getPlayerData(id).getBalance();
 			//Wpisowe
-			getPlayerData(id).setBalance(bal - 20);
-			incPot(20);
+			
+			if(bal-blind <= 0) {
+				// TODO: KICK PLAYER FROM GAME BECAUSE NO MUNNY
+			}
+			
+			getPlayerData(id).setBalance(bal - blind);
+			incPot(blind);
 			cth.displayAccount(bal);
 		}
 		
@@ -130,8 +136,6 @@ public class Server extends Thread
 		//Ask players for BET whenever anyone in game is below highest bet 
 		boolean isNotOnePlayer1 = bet(1);
 		
-		System.out.println("Nie ma pan siusiaka");
-		
 		if(isNotOnePlayer1)
 		{
 			//Ask players if they want to change cards
@@ -141,10 +145,10 @@ public class Server extends Thread
 					currPlayer.queueBroadcast("PROMPTCHANGE");
 				}
 			}
-			System.out.println("Słoiki nadziewane sedeseeem");
+
 			//Ask players for second bet
 			boolean isNotOnePlayer2 = bet(2);
-			System.out.println("Ale kiełbasę wali Stachu w młynie boli go");
+
 			if(isNotOnePlayer2)
 			{
 				//Assessing hands
@@ -159,7 +163,6 @@ public class Server extends Thread
 			}
 		}
 		
-		System.out.println("Kancelaria! Kancelaria! Kancelaria");
 		
 		/* Get player with the strongest Hand
 		 * new Comparator is set due to fact that PlayerData is already Comparable,
@@ -353,6 +356,23 @@ public class Server extends Thread
 				initialMoney = 0;
 				System.err.println("Incorrect amount of money was provided. Try again.");
 				continue;
+			}
+		}
+		
+		//Prompt user to specify how much money players will spend on blind
+		while (blind == 0)
+		{
+			System.out.println("How much money shall players spend on entrance (min. 1)?");
+			String r = input.next();
+			try {
+				blind = Integer.parseInt(r);
+				if(blind < 1) {
+					throw new NumberFormatException();
+				}
+			}
+			catch(NumberFormatException e) {
+				blind = 0;
+				System.err.println("Incorrect amount of money was provided. Try again.");
 			}
 		}
 		

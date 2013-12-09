@@ -98,7 +98,9 @@ public class Server extends Thread
 			//Wpisowe
 			
 			if(bal-blind <= 0) {
-				// TODO: KICK PLAYER FROM GAME BECAUSE NO MUNNY
+				cth.finalize();
+				clientThreads.remove(cth);
+				continue;
 			}
 			
 			getPlayerData(id).setBalance(bal - blind);

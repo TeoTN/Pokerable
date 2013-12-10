@@ -107,7 +107,7 @@ public class Server extends Thread
 			
 			getPlayerData(id).setBalance(bal - blind);
 			incPot(blind);
-			cth.displayAccount(bal);
+			cth.displayAccount(bal-blind);
 		}
 		
 		//Set isBetting field to 'true' for all players at the very beginning

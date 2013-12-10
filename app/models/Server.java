@@ -27,6 +27,7 @@ public class Server extends Thread
 	private static int numberOfBets = 0;
 	private static int numberOfHandshakes = 0;
 	private int roundRobin = 0;
+	int blind = 0;
 	
 	private Server() throws Exception {
 		this(1700);

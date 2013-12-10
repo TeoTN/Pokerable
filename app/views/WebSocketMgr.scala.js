@@ -72,6 +72,22 @@ $(function() {
         		$('#money').text(msgArray[1]);
         	break;
         	
+        	case "WIN":
+        		alert("You've won the round!");
+        	break;
+        	
+        	case "TIE":
+        		alert("There was a tie!");
+        	break;
+        	
+        	case "LOST":
+        		alert("You've lost the round!");
+        	break;
+        	
+        	case "ERROR":
+        		alert("ERROR\n"+msgArray[1]);
+        	break;
+        	
         	case "ROUND":
         		$('#round').text(msgArray[1]);
         	break;

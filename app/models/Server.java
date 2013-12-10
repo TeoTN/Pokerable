@@ -452,7 +452,14 @@ public class Server extends Thread
 		System.out.println("");
 		broadcastAll("GETWINS");
 		for (PlayerData pd: pData) {
-			while (pd.isSentWins() == false) {}
+			while (pd.isSentWins() == false) {
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		String msg = "RESULT";

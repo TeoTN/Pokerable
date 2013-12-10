@@ -119,6 +119,7 @@ public class Server extends Thread
 		//Reset variables
 		changedHands = 0;
 		numberOfBets = 0;
+		
 		//move round-robin
 		roundRobin=(roundRobin+1)%players;
 		
@@ -298,6 +299,7 @@ public class Server extends Thread
 			}
 		}
 		ClientThread.resetBet();
+		
 		resetBet();
 		ClientThread.resetAllowedThread();
 		
@@ -319,6 +321,9 @@ public class Server extends Thread
 	private void resetBet() {
 		for (PlayerData pd: pData) {
 			pd.setPreviousBet(0);
+		}
+		for (ClientThread cth: clientThreads) {
+			cth.resetMyPreviousBet();
 		}
 	}
 

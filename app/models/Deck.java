@@ -131,8 +131,4 @@ public class Deck
 	public void shuffle() {
 		Collections.shuffle(cards);
 	}
-	
-	public static void recreate() {
-		instance = new Deck();
-	}
 }

@@ -24,7 +24,8 @@ public class ClientThread extends Thread {
 	private String myName;
 	static int allowedThread=0;
 	static Object lock = null;
-	static int highestBet = 0, previousBet = 0, myPreviousBet = 0;
+	static int highestBet = 0, previousBet = 0;
+	int myPreviousBet = 0;
     
     /**
      * Constructor for instantiation
@@ -340,6 +341,10 @@ public class ClientThread extends Thread {
 	public static void resetBet() {
 		previousBet = 0;
 		highestBet = 0;
+	}
+	
+	public void resetMyPreviousBet() {
+		myPreviousBet = 0;
 	}
 
 	public static void resetAllowedThread() {

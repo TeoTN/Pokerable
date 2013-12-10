@@ -237,6 +237,7 @@ public class Messenger {
 	 * @param msg Array of arguments to be sent. E.g. {"SETHAND", "S9", "D9", "H9", "C3", "C7"}
 	 */
 	public void broadcast(String msg) {
+		System.err.println("-> DBG: Broadcast: "+msg);
 		out.println(msg);
 	}
 	

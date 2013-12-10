@@ -257,11 +257,12 @@ public class Server extends Thread
 		
 		numberOfBets = 0;
 		int betTurn = 0; //betTurn is number of bet within one bidding set however I feel sorry for those reading the code
+		ClientThread.moveLockToPlayer(roundRobin);
 		while (numberOfBets == 0)
 		{
 			for (int j=0; j<players; j++) {
 				ClientThread currPlayer = clientThreads.get((j+roundRobin)%players);
-				System.err.println("    {DEBUG: roundRobin "+j%players+" }");
+				System.err.println("    {DEBUG: roundRobin "+(j+roundRobin)%players+" }");
 				PlayerData pd = getPlayerData(currPlayer.getID());
 				if (pd.getPreviousBet() < ClientThread.getHighestBet() || pd.getPreviousBet() == 0) {
 					String permittedBets = "";
@@ -269,7 +270,6 @@ public class Server extends Thread
 						permittedBets = "CHECK|BET|FOLD|ALLIN";
 					}
 					else permittedBets = "RAISE|CALL|FOLD|ALLIN";
-					ClientThread.moveLockToPlayer(roundRobin);
 					currPlayer.queueBroadcast("PROMPTBET|"+i+"|"+getPot()+"|"+permittedBets);
 					betTurn++;
 				}

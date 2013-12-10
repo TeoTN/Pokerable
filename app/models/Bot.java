@@ -66,7 +66,7 @@ public class Bot extends Player
 		
 		String out = BotStrategy.strategy1(accountBalance, a, getMoneyAtBeginning(), highestBet, amIBluffing, hrb);
 		
-		if(out.charAt(out.length()-1) == 'F') {
+		if(out.length() >= 1 && out.charAt(out.length()-1) == 'F') {
 			amIBluffing = true;
 			out = out.substring(0, out.length()-1);
 		}

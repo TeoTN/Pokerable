@@ -99,7 +99,7 @@ public class Server extends Thread
 			
 			if(bal-blind <= 0) {
 				cth.finalize();
-				clientThreads.remove(cth);
+				cth = null;
 				continue;
 			}
 			

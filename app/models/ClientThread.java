@@ -344,4 +344,8 @@ public class ClientThread extends Thread {
 	public static void resetAllowedThread() {
 		allowedThread = 0;
 	}
+	
+	public static void moveLockToPlayer(int i) {
+		allowedThread = i; //And pray to lord that i is good, sorry
+	}
 }/* END OF CLASS ClientThread */

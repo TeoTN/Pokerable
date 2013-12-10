@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -25,6 +26,7 @@ public class Server extends Thread
 	private static int pot=0;
 	private static int numberOfBets = 0;
 	private static int numberOfHandshakes = 0;
+	private int roundRobin = 0;
 	
 	private Server() throws Exception {
 		this(1700);
@@ -109,6 +111,8 @@ public class Server extends Thread
 		//Reset variables
 		changedHands = 0;
 		numberOfBets = 0;
+		//move round-robin - at the beginning, cause random() + 1 is still random
+		roundRobin++;
 		
 		System.out.println("START");
 		
@@ -243,19 +247,22 @@ public class Server extends Thread
 		
 		
 		numberOfBets = 0;
-		int roundrobin = 0;
+		int betTurn = 0; //betTurn is number of bet within one bidding set however I feel sorry for those reading the code
 		while (numberOfBets == 0)
 		{
-			for (ClientThread currPlayer: clientThreads) {
+			for (int j=roundRobin; j<=players; j++) {
+				ClientThread currPlayer = clientThreads.get(j%players);
+				System.err.println("    {DEBUG: roundRobin "+j%players+" }");
 				PlayerData pd = getPlayerData(currPlayer.getID());
 				if (pd.getPreviousBet() < ClientThread.getHighestBet() || pd.getPreviousBet() == 0) {
 					String permittedBets = "";
-					if (roundrobin == 0) {
+					if (betTurn == 0) {
 						permittedBets = "CHECK|BET|FOLD|ALLIN";
 					}
 					else permittedBets = "RAISE|CALL|FOLD|ALLIN";
+					ClientThread.moveLockToPlayer(roundRobin);
 					currPlayer.queueBroadcast("PROMPTBET|"+i+"|"+getPot()+"|"+permittedBets);
-					roundrobin++;
+					betTurn++;
 				}
 				else numberOfBets++;
 			}
@@ -359,6 +366,8 @@ public class Server extends Thread
 		//Create an ArrayList that's going to hold players' threads. 
 		clientThreads = new ArrayList<ClientThread>(players);
 		pData = new ArrayList<PlayerData>(players);
+		Random generator = new Random();
+		roundRobin = generator.nextInt(players);
 		
 		//Initialize PlayerData structure holding number of wins, hands, money in accounts
 		for (int i=0; i<players; i++) {

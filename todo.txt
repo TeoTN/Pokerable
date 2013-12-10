@@ -1,0 +1,22 @@
+TODO:
+1) Wypisywanie pot (puli) z uwzglêdnieniem wpisowego
+
+2) Po all-in - jeœli gracz ma za ma³o ¿etonów na Call i Raise, mo¿e zagraæ ALLIN (upewniæ siê, czy to dzia³a jak trzeba!)
+
+3) Jeœli nast¹pi³o zagranie all-in druga licytacja jest pomijana
+
+4) Wpisowe musi byæ parametrem gry (obecnie jest "ustawione" na 20, po prostu na pocz¹tku tyle jest wrzucane do puli i odejmowane z kont)
+
+5) W pierwszej rundzie zaczyna (obie) licytacje jeden, losowy gracz, potem kolejni
+
+6) Gdy na pocz¹tku rundy gracz ma mniej ¿etonów ni¿ wpisowe, odpada (a nie 0 jak dotychczas)
+
+7) komunikaty ERROR musz¹ byæ wyœwietlane w przegl¹darce, warto te¿ dorobiæ disconnecta
+
+8) obs³uga komunikatów RESULT/WIN/TIE/LOSE, czyli wyœwietlenie zwyciêzcy
+
+9) Testy dla Messengera - do tego celu dorobiæ obs³ugê wiadomoœci TEST w funkcji dispatchGUI(), która wykona performMethod("MessengerTest.staticMethod") czy coœ
+
+10) Menu w GUI do okreœlania parametrów gry oraz startowania serwera!
+
+++ Rozegranie XX rozgrywek, ¿eby upewniæ siê, ¿e nic nie dzia³a

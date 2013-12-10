@@ -98,8 +98,15 @@ public class Server extends Thread
 			int id = cth.getID();
 			int bal = getPlayerData(id).getBalance();
 			//Wpisowe
-			getPlayerData(id).setBalance(bal - 20);
-			incPot(20);
+			
+			if(bal-blind <= 0) {
+				cth.finalize();
+				cth = null;
+				continue;
+			}
+			
+			getPlayerData(id).setBalance(bal - blind);
+			incPot(blind);
 			cth.displayAccount(bal);
 		}
 		
@@ -361,6 +368,23 @@ public class Server extends Thread
 				initialMoney = 0;
 				System.err.println("Incorrect amount of money was provided. Try again.");
 				continue;
+			}
+		}
+		
+		//Prompt user to specify how much money players will spend on blind
+		while (blind == 0)
+		{
+			System.out.println("How much money shall players spend on entrance (min. 1)?");
+			String r = input.next();
+			try {
+				blind = Integer.parseInt(r);
+				if(blind < 1) {
+					throw new NumberFormatException();
+				}
+			}
+			catch(NumberFormatException e) {
+				blind = 0;
+				System.err.println("Incorrect amount of money was provided. Try again.");
 			}
 		}
 		

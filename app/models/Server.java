@@ -119,8 +119,8 @@ public class Server extends Thread
 		//Reset variables
 		changedHands = 0;
 		numberOfBets = 0;
-		//move round-robin - at the beginning, cause random() + 1 is still random
-		roundRobin++;
+		//move round-robin
+		roundRobin=(roundRobin+1)%players;
 		
 		System.out.println("START");
 		

@@ -109,8 +109,8 @@ public class Deck
 			e.printStackTrace();
 		}
 		
-		if(cards.size() < 52) {
-			cards.add(c);
+		if(instance.cards.size() < 52) {
+			instance.cards.add(c);
 		}
 		else {
 			throw new Exception("Too many cards");
@@ -121,7 +121,7 @@ public class Deck
 	 * Checks if deck is empty.
 	 */
 	public boolean empty(){
-		return cards.isEmpty();
+		return instance.cards.isEmpty();
 	}
 	
 	/**

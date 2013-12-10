@@ -199,11 +199,12 @@ public class ClientThread extends Thread {
 				break;
 			case "ALLIN":
 				if (currentBalance > 0) {
-					highestBet = currentBalance;
+					highestBet = Math.max(currentBalance,highestBet);
 					Server.incPot(currentBalance);
 					myPreviousBet = previousBet = currentBalance;
 					currentBalance = 0;
 					isDone = true;
+					pd.setIsBetting(false);
 					System.out.println("Player "+myName+" is all-in");
 				}
 				else {

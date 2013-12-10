@@ -47,7 +47,7 @@ $(function() {
         	break;
         	
         	case "ROUND":
-
+				$('#round').text(msgArray[1]);
         	break;
         	
         	case "PROMPTBET":

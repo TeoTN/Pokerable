@@ -92,12 +92,12 @@ public class ClientThread extends Thread {
     			for (int j=5; j<arr.length; j++) {
     				if (arr[i].equals(arr[j])) {
 						changes++;
+						arr[i] = deck.pullCardToString();
     					try {
 							deck.pushCard(arr[i]);
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
-						arr[i] = deck.pullCardToString();
 					}
     			}
     		}
@@ -348,5 +348,16 @@ public class ClientThread extends Thread {
 	
 	public static void moveLockToPlayer(int i) {
 		allowedThread = i; //And pray to lord that i is good, sorry
+	}
+	
+	public void returnHand(String msg) {
+		String arr[] = msg.split("\\|");
+		for (String s: arr) {
+			try {
+				Deck.getInstance().pushCard(s);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }/* END OF CLASS ClientThread */

@@ -39,8 +39,8 @@ public class Bot extends Player
 			for (Card c: toChange) {
 				msg+="|"+c.toString();
 			}
-			if (toChange.size()>0)
-				printer.print(msg.substring(15, msg.length()));
+			/*if (toChange.size()>0)
+				printer.print(msg.substring(15, msg.length()));*/
 		}
 		msgr.broadcast("CHANGE|"+msg); 
 	}

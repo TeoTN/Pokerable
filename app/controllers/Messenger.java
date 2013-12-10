@@ -126,6 +126,9 @@ public class Messenger {
             		System.out.println("Player "+arr[i]+" has scored: "+arr[i+1]);
             	}
             }
+            else if (msg.startsWith("PROMPTRETURN")) {
+            	performMethod("returnHand");
+            }
             else if (msg.startsWith("ERROR")) {
             	String arr[] = msg.split("\\|");
             	if (arr[1].equals("CHEAT")) {
@@ -163,6 +166,10 @@ public class Messenger {
             else if (msg.startsWith("SETBET")) {
             	msg = msg.replace("SETBET|", "");
             	performMethod("bet", msg);
+            }
+            else if (msg.startsWith("RETURNHAND")) {
+            	msg = msg.replace("RETURNHAND|", "");
+            	performMethod("returnHand", msg);
             }
             else System.err.println(msg);
 		}

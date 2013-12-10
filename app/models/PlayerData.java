@@ -18,6 +18,14 @@ public class PlayerData implements Comparable<PlayerData> {
 		isBetting = true;
 	}
 	
+	public void reset() {
+		hand = null;
+		previousBet = 0;
+		sentWins = false;
+		allIn = false;
+		isBetting = true;
+	}
+	
 	public String getName() {
 		return name;
 	}

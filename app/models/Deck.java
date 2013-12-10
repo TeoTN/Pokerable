@@ -70,7 +70,7 @@ public class Deck
 	 */
 	public Card pullCard() throws Exception
 	{
-		Card c = cards.remove(0);
+		Card c = instance.cards.remove(0);
 		
 		if (c == null){
 			throw new Exception("Deck is empty");
@@ -130,5 +130,9 @@ public class Deck
 	 */
 	public void shuffle() {
 		Collections.shuffle(cards);
+	}
+	
+	public static void recreate() {
+		instance = new Deck();
 	}
 }

@@ -184,6 +184,10 @@ public abstract class Player extends Thread
     public void broadcastWins() {
     	msgr.broadcast("WINS|"+wins);
     }
+    
+    public void returnHand() {
+    	msgr.broadcast("RETURNHAND|"+getHandToString());
+    }
 
 	public static boolean isGUIModeOn() {
 		return isGUIModeOn;

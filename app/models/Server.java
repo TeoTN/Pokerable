@@ -230,7 +230,10 @@ public class Server extends Thread
 			if (pd.getBalance() == 0) {
 				pd.setInGame(false);
 			}
+			pd.reset();
 		}
+		
+		broadcastAll("PROMPTRETURN");
 	}
 
 	private boolean bet(int i)

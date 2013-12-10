@@ -251,8 +251,8 @@ public class Server extends Thread
 		int betTurn = 0; //betTurn is number of bet within one bidding set however I feel sorry for those reading the code
 		while (numberOfBets == 0)
 		{
-			for (int j=roundRobin; j<=players; j++) {
-				ClientThread currPlayer = clientThreads.get(j%players);
+			for (int j=0; j<players; j++) {
+				ClientThread currPlayer = clientThreads.get((j+roundRobin)%players);
 				System.err.println("    {DEBUG: roundRobin "+j%players+" }");
 				PlayerData pd = getPlayerData(currPlayer.getID());
 				if (pd.getPreviousBet() < ClientThread.getHighestBet() || pd.getPreviousBet() == 0) {

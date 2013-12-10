@@ -39,7 +39,7 @@ $(function() {
         		previousBet = 'nobody';
         	break;
         	
-        	case "PROMPTCHANGE":[
+        	case "PROMPTCHANGE":
         		@if(typeStr!="Bot") {
         		$('#handDesc').text('Select cards to change (up to 4):');
         		$('#gameplay').append('<button id="change">Change cards</button>');

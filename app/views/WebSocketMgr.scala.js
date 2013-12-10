@@ -40,7 +40,7 @@ $(function() {
         	break;
         	
         	case "PROMPTCHANGE":
-        		@if(typeStr!="Bot") {
+        		@if(typeStr!="bot") {
         		$('#handDesc').text('Select cards to change (up to 4):');
         		$('#gameplay').append('<button id="change">Change cards</button>');
         		$('.card').addClass('clickable');
@@ -53,7 +53,7 @@ $(function() {
         	break;
         	
         	case "PROMPTBET":
-        		@if(typeStr!="Bot") {
+        		@if(typeStr!="bot") {
         		var b = $('#bet');
         		b.empty();
         		b.append("<p>Let's gamble</p>");
@@ -77,19 +77,19 @@ $(function() {
         	break;
         	
         	case "WIN":
-        		@if(typeStr!="Bot") {
+        		@if(typeStr!="bot") {
         		alert("You've won the round!");
         		}
         	break;
         	
         	case "TIE":
-        	@if(typeStr!="Bot") {
+        	@if(typeStr!="bot") {
         		alert("There was a tie!");
         	}
         	break;
         	
         	case "LOST":
-        	@if(typeStr!="Bot") {
+        	@if(typeStr!="bot") {
         		alert("You've lost the round!");
         	}
         	break;

@@ -1,4 +1,4 @@
-@(id:Int)
+@(id:Int, typeStr:String)
 
 $(function() {
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
@@ -39,11 +39,13 @@ $(function() {
         		previousBet = 'nobody';
         	break;
         	
-        	case "PROMPTCHANGE":
+        	case "PROMPTCHANGE":[
+        		@if(typeStr!="Bot") {
         		$('#handDesc').text('Select cards to change (up to 4):');
         		$('#gameplay').append('<button id="change">Change cards</button>');
         		$('.card').addClass('clickable');
         		bindChanger();
+        		}
         	break;
         	
         	case "ROUND":
@@ -51,6 +53,7 @@ $(function() {
         	break;
         	
         	case "PROMPTBET":
+        		@if(typeStr!="Bot") {
         		var b = $('#bet');
         		b.empty();
         		b.append("<p>Let's gamble</p>");
@@ -61,6 +64,7 @@ $(function() {
         		b.append('<button id="'+msgArray[6]+'" class="bet">'+msgArray[6]+'</button>');
 				bindBet();
 				b.show();
+				}
         	break;
         	
         	case "PREVIOUSBET":
@@ -73,15 +77,21 @@ $(function() {
         	break;
         	
         	case "WIN":
+        		@if(typeStr!="Bot") {
         		alert("You've won the round!");
+        		}
         	break;
         	
         	case "TIE":
+        	@if(typeStr!="Bot") {
         		alert("There was a tie!");
+        	}
         	break;
         	
         	case "LOST":
+        	@if(typeStr!="Bot") {
         		alert("You've lost the round!");
+        	}
         	break;
         	
         	case "ERROR":

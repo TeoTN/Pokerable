@@ -34,13 +34,13 @@ public class PlayerManager extends Controller {
 		return ok(player.render(type, lastID-1));
 	}
 	
-	public static Result connected(Integer id) {
+	public static Result connected(Integer id, String type) {
 		Player instance = players.get(id);
 		final Map<String, String[]> values = request().body().asFormUrlEncoded();
 		String name = values.get("playerName")[0];
 		instance.sendPlayerName(name);
 		instance.setGUIconnected();
-		return ok(gameplay.render(id));
+		return ok(gameplay.render(id, type));
 	}
 	
 	public static void broadcastWith(int id, String msg) {

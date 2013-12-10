@@ -5,9 +5,9 @@
 # Home page
 GET     /										controllers.Application.index()
 GET		/join/:type								controllers.PlayerManager.newInstance(type:String)
-POST	/setUserName/:id						controllers.PlayerManager.connected(id:Integer)
+POST	/setUserName/:id/:type					controllers.PlayerManager.connected(id:Integer, type:String)
 GET     /webSocketMgr/:id						controllers.Application.webSocketMgr(id:Integer)
-GET     /assets/javascripts/WebSocketMgr.js		controllers.Application.webSocketMgrJs(id:Integer)
+GET     /assets/javascripts/WebSocketMgr.js		controllers.Application.webSocketMgrJs(id:Integer, type:String)
 
 
 # Map static resources from the /public folder to the /assets URL path

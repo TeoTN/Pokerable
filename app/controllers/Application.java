@@ -10,8 +10,8 @@ public class Application extends Controller {
         return ok(index.render("Pokerable"));
     }
     
-    public static Result webSocketMgrJs(int id) {
-        return ok(views.js.WebSocketMgr.render(id));
+    public static Result webSocketMgrJs(int id, String type) {
+        return ok(views.js.WebSocketMgr.render(id, type));
     }
     
     /**

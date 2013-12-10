@@ -1,4 +1,4 @@
-@(id:Int)
+@(id:Int, typeStr:String)
 @main {
 	<div id="gameplay">
 		<div>
@@ -17,5 +17,5 @@
 		<div id="console"></div>
 		<textarea id="talk"></textarea>
 	</div>
-	<script type="text/javascript" charset="utf-8" src="@routes.Application.webSocketMgrJs(id)"></script>
+	<script type="text/javascript" charset="utf-8" src="@routes.Application.webSocketMgrJs(id, typeStr)"></script>
 }

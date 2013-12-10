@@ -3,7 +3,7 @@
 
 @main {
 	<h1>Preparing to play as @typeStr</h1>
-		<form method="POST" action="../setUserName/@id">
+		<form method="POST" action="../setUserName/@id/@typeStr">
 			@if(typeStr=="human") {
 				<label for="playerName">Enter name of player:</label>
 				<input type="text" name="playerName" id="playerName" placeholder="e.g. John">

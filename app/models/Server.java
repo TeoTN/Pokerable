@@ -142,7 +142,6 @@ public class Server extends Thread
 		//Ask players for BET whenever anyone in game is below highest bet 
 		boolean isNotOnePlayer1 = bet(1);
 		ClientThread.resetAllowedThread();
-		System.out.println("Nie ma pan siusiaka");
 		
 		if(isNotOnePlayer1)
 		{
@@ -153,11 +152,11 @@ public class Server extends Thread
 					currPlayer.queueBroadcast("PROMPTCHANGE");
 				}
 			}
-			System.out.println("Słoiki nadziewane sedeseeem");
+			
 			//Ask players for second bet
 			boolean isNotOnePlayer2 = bet(2);
 			ClientThread.resetAllowedThread();
-			System.out.println("Ale kiełbasę wali Stachu w młynie boli go");
+			
 			if(isNotOnePlayer2)
 			{
 				//Assessing hands
@@ -171,8 +170,6 @@ public class Server extends Thread
 				}
 			}
 		}
-		
-		System.out.println("Kancelaria! Kancelaria! Kancelaria");
 		
 		/* Get player with the strongest Hand
 		 * new Comparator is set due to fact that PlayerData is already Comparable,
@@ -251,7 +248,6 @@ public class Server extends Thread
 		}
 		
 		if(cnt_isBetting <= 1){
-			System.out.println("Szli z garem! 1");
 			last.addBalance(getPot());
 			pot = 0;
 			return false;
@@ -314,11 +310,9 @@ public class Server extends Thread
 		}
 		
 		if(cnt_isBetting <= 1){
-			System.out.println("Szli z garem! 2");
 			return false;
 		}
 		
-		System.out.println("Coli z wódką dać!");
 		return true;
 	}
 

@@ -141,7 +141,7 @@ public class Server extends Thread
 		
 		//Ask players for BET whenever anyone in game is below highest bet 
 		boolean isNotOnePlayer1 = bet(1);
-		
+		ClientThread.resetAllowedThread();
 		System.out.println("Nie ma pan siusiaka");
 		
 		if(isNotOnePlayer1)
@@ -156,6 +156,7 @@ public class Server extends Thread
 			System.out.println("Słoiki nadziewane sedeseeem");
 			//Ask players for second bet
 			boolean isNotOnePlayer2 = bet(2);
+			ClientThread.resetAllowedThread();
 			System.out.println("Ale kiełbasę wali Stachu w młynie boli go");
 			if(isNotOnePlayer2)
 			{

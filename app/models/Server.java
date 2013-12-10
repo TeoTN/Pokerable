@@ -227,7 +227,7 @@ public class Server extends Thread
 		}
 		//Exclude from game people with no money
 		for (PlayerData pd: pData) {
-			if (pd.getBalance() == 0) {
+			if (pd.getBalance() < blind) {
 				pd.setInGame(false);
 			}
 			pd.reset();
